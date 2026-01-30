@@ -1,0 +1,376 @@
+openapi: 3.1.1
+
+info:
+  title: BaroLab API
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Users
+  - name: Admins
+  - name: Posts
+  - name: Comments
+
+paths:
+  /login:
+    post:
+      tags:
+        - Users
+      requestBody:
+        content:
+          aplication/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sign-up:
+    post:
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/{userId}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      summary: Get User by ID
+
+      tags:
+        - Users
+
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /user/{userId}/activate:
+    put:
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      tags:
+      - Users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+
+  /user/{userId}/block:
+    put:
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      tags:
+        - Users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+
+
+  /admins:
+    post:
+      summary: Create Admin
+      tags:
+        - Admins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Admin'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+
+    get:
+      summary: Get all Admins
+      tags:
+        - Admins
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Admin'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /post:
+    post:
+      tags:
+        - Posts
+      requestBody:
+
+
+
+
+
+
+components:
+  parameters:
+
+    userId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID of the User
+
+  schemas:
+
+    User:
+      type: object
+      required:
+        - id
+        - login
+        - email
+        - status
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
+        login:
+          type: string
+          example: login
+        email:
+          type: string
+          format: email
+          example: test@gmail.com
+        status:
+          type: string
+          enum: [ ACTIVE, BLOCKED ]
+          example: ACTIVE
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T12:00:00Z
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T13:41:22Z
+          readOnly: true
+
+    Admin:
+      type: object
+      required:
+        - id
+        - login
+        - status
+        - role
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
+        login:
+          type: string
+          example: login
+        password:
+          type: string
+          format: password
+          example: qwerty1234
+          writeOnly: true
+        status:
+          type: string
+          enum: [ ACTIVE, BLOCKED ]
+          example: ACTIVE
+          readOnly: true
+        role:
+          type: string
+          enum: [ SUPERUSER, ADMIN ]
+          example: ADMIN
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T12:00:00Z
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T13:41:22Z
+          readOnly: true
+
+    TokenResponse:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          format: text
+          description: JWT token.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik
+
+    LoginRequest:
+      type: object
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+          format: login
+          example: login
+        password:
+          type: string
+          format: password
+          example: qwerty123456
+
+    SignUpRequest:
+      type: object
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+          example: login
+        password:
+          type: string
+          format: password
+          example: qwerty123456
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Error message.
