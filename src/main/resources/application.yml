@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: loyalty-card
+  jackson:
+    property-naming-strategy: SNAKE_CASE
