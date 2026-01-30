@@ -101,7 +101,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/userId'
       tags:
-      - Users
+        - Users
       responses:
         200:
           description: OK
