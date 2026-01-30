@@ -101,7 +101,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/userId'
       tags:
-      - Users
+        - Users
       responses:
         200:
           description: OK
@@ -226,6 +226,129 @@ paths:
       tags:
         - Posts
       requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /post/{postId}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      summary: Get Post by ID
+
+      tags:
+        - Posts
+
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+
+  /post/{postId}/activate:
+    put:
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      tags:
+        - Posts
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /post/{postId}/block:
+    put:
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      tags:
+        - Posts
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+
 
 
 
@@ -234,6 +357,14 @@ paths:
 
 components:
   parameters:
+    postId:
+      name: postId
+      in: path
+      required: true
+      schema:
+        type: String
+        format: uuid
+      description: Id of Post
 
     userId:
       name: userId
@@ -245,6 +376,43 @@ components:
       description: ID of the User
 
   schemas:
+    Post:
+      type: object
+      required:
+        - id
+        - user_id
+        - rating
+        - status
+        - content
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+        user_id:
+          type: string
+          format: uuid
+          example: 38ca31a9-2236-40w7-ac97-d1ed40a2778e
+        rating:
+          type: integer
+          example: 0
+        status:
+          type: String
+          enum: [ACTIVE, BLOCKED]
+          example: ACTIVE
+        content:
+          type: String
+          example: description
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T12:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T13:41:22Z
 
     User:
       type: object
