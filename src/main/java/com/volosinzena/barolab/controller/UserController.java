@@ -1,7 +1,74 @@
 package com.volosinzena.barolab.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+
+import com.volosinzena.barolab.controller.dto.UserDto;
+import com.volosinzena.barolab.mapper.UserMapper;
+import com.volosinzena.barolab.service.UserService;
+import com.volosinzena.barolab.service.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class UserController {
+
+    private final UserService userService;
+    private final UserMapper userMapper;
+
+
+    @Autowired
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
+
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserDto>> getUsers() {
+
+        List<User> userList = userService.getAllUsers();
+
+        List<UserDto> userDtoList = userList.stream().map(userMapper::toDto).toList();
+
+        return ResponseEntity.ok(userDtoList);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserDto> getUser(@PathVariable UUID userId) {
+
+        User user = userService.getUserById(userId);
+
+        UserDto userDto = userMapper.toDto(user);
+
+        return ResponseEntity.ok(userDto);
+
+    }
+
+    @PutMapping("/user/{userId}/activate")
+    public ResponseEntity<UserDto> activateUser(@PathVariable UUID userId) {
+
+        User user = userService.getUserById(userId);
+
+        UserDto userDto = userMapper.toDto(user);
+
+        return ResponseEntity.ok(userDto);
+
+    }
+
+    @PutMapping("/user/{userId}/block")
+    public ResponseEntity<UserDto> blockUser(@PathVariable UUID userId) {
+
+        User user = userService.getUserById(userId);
+
+        UserDto userDto = userMapper.toDto(user);
+
+        return ResponseEntity.ok(userDto);
+
+    }
+
+
 }
