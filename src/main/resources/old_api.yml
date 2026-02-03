@@ -20,7 +20,7 @@ paths:
         - Users
       requestBody:
         content:
-          application/json: 
+          aplication/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
       responses:
@@ -104,32 +104,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+
+
   /user/{userId}:
     get:
       parameters:
         - $ref: '#/components/parameters/userId'
       summary: Get User by ID
+
       tags:
         - Users
+
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User' 
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        404: 
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
 
   /user/{userId}/activate:
     put:
@@ -169,6 +163,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+
+
   /user/{userId}/block:
     put:
       parameters:
@@ -207,6 +203,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+
+
+
   /admins:
     post:
       summary: Create Admin
@@ -224,18 +223,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Admin'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
 
     get:
       summary: Get all Admins
@@ -268,21 +255,19 @@ paths:
       parameters:
         - $ref: '#/components/parameters/adminId'
       summary: Get Admin by ID
+
       tags:
         - Admins
+
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Admin' 
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Admin'
 
   /admin/{adminId}/activate:
     put:
@@ -394,7 +379,7 @@ paths:
     get:
       summary: Get all Posts
       tags:
-        - Posts
+        - Users
       responses:
         200:
           description: OK
@@ -422,21 +407,19 @@ paths:
       parameters:
         - $ref: '#/components/parameters/postId'
       summary: Get Post by ID
+
       tags:
         - Posts
+
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post' 
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
 
   /post/{postId}/activate:
     put:
@@ -514,17 +497,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /post/{postId}/comment:
+  /post/comment:
     post:
-      parameters:
-        - $ref: '#/components/parameters/postId'
       tags:
         - Comments
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: '#/components/schemas/Comments'
       responses:
         200:
           description: OK
@@ -559,7 +540,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Comment'
+                  $ref: '#/components/schemas/Admin'
         401:
           description: Unauthorized
           content:
@@ -573,32 +554,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /post/{postId}/comment/{commentId}:
+  /post/comment/{commentId}:
     get:
       parameters:
-        - $ref: '#/components/parameters/postId'
         - $ref: '#/components/parameters/commentId'
       summary: Get Comment by ID
+
       tags:
         - Comments
+
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comments'
 
-  /post/{postId}/comment/{commentId}/activate:
+  /post/comment/{commentId}/activate:
     put:
       parameters:
-        - $ref: '#/components/parameters/postId'
         - $ref: '#/components/parameters/commentId'
       tags:
         - Comments
@@ -608,7 +585,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
+                $ref: '#/components/schemas/Comments'
         400:
           description: Bad Request
           content:
@@ -634,10 +611,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /post/{postId}/comment/{commentId}/block:
+  /post/comment/{commentId}/block:
     put:
       parameters:
-        - $ref: '#/components/parameters/postId'
         - $ref: '#/components/parameters/commentId'
       tags:
         - Comments
@@ -647,7 +623,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
+                $ref: '#/components/schemas/Comments'
         400:
           description: Bad Request
           content:
@@ -672,6 +648,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+
+
+
+
 
 
 components:
@@ -681,7 +662,7 @@ components:
       in: path
       required: true
       schema:
-        type: string 
+        type: String
         format: uuid
       description: Id of Comment
     adminId:
@@ -689,7 +670,7 @@ components:
       in: path
       required: true
       schema:
-        type: string 
+        type: String
         format: uuid
       description: Id of Admin
 
@@ -698,7 +679,7 @@ components:
       in: path
       required: true
       schema:
-        type: string 
+        type: String
         format: uuid
       description: Id of Post
 
@@ -712,7 +693,7 @@ components:
       description: ID of the User
 
   schemas:
-    Comment:
+    Comments:
       type: object
       required:
         - id
@@ -737,9 +718,10 @@ components:
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
         text:
           type: string
+          format: text
           example: Something cool maybe
         status:
-          type: string 
+          type: string
           enum: [ ACTIVE, BLOCKED ]
           example: ACTIVE
           readOnly: true
@@ -760,7 +742,6 @@ components:
         - user_id
         - rating
         - status
-        - title
         - content
         - created_at
         - updated_at
@@ -772,20 +753,17 @@ components:
         user_id:
           type: string
           format: uuid
-          example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          example: 38ca31a9-2236-40w7-ac97-d1ed40a2778e
         rating:
           type: integer
           example: 0
         status:
-          type: string 
+          type: String
           enum: [ ACTIVE, BLOCKED ]
           example: ACTIVE
           readOnly: true
-        title:
-          type: string
-          example: Post name
         content:
-          type: string 
+          type: String
           example: description
         created_at:
           type: string
@@ -803,7 +781,6 @@ components:
         - login
         - email
         - status
-        - role
         - created_at
         - updated_at
       properties:
@@ -824,10 +801,6 @@ components:
           enum: [ ACTIVE, BLOCKED ]
           example: ACTIVE
           readOnly: true
-        role:
-          type: string
-          enum: [ USER, VIP ]
-          example: USER
         created_at:
           type: string
           format: date-time
@@ -890,6 +863,7 @@ components:
       properties:
         token:
           type: string
+          format: text
           description: JWT token.
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik
 
@@ -901,6 +875,7 @@ components:
       properties:
         login:
           type: string
+          format: login
           example: login
         password:
           type: string
@@ -911,16 +886,11 @@ components:
       type: object
       required:
         - login
-        - email
         - password
       properties:
         login:
           type: string
           example: login
-        email:
-          type: string
-          format: email
-          example: user@example.com
         password:
           type: string
           format: password
