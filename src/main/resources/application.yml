@@ -1,5 +1,5 @@
 spring:
   application:
-    name: loyalty-card
+    name: BaroLab
   jackson:
     property-naming-strategy: SNAKE_CASE
