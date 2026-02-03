@@ -16,17 +16,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User getUserById(UUID id) {
-        return null;
-    }
-
-    @Override
     public List<User> getAllUsers() {
         return userHashMap.values().stream().toList();
     }
 
     @Override
-    public User getUseById(UUID userId) {
+    public User getUserById(UUID userId) {
         return userHashMap.get(userId);
     }
 

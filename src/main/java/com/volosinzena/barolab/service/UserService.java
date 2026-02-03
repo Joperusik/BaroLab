@@ -12,8 +12,6 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User getUseById(UUID userId);
-
     User activateUser(UUID userId);
 
     User blockUser(UUID userId);
