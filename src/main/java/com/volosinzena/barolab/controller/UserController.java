@@ -51,7 +51,7 @@ public class UserController {
     @PutMapping("/user/{userId}/activate")
     public ResponseEntity<UserDto> activateUser(@PathVariable UUID userId) {
 
-        User user = userService.getUserById(userId);
+        User user = userService.activateUser(userId);
 
         UserDto userDto = userMapper.toDto(user);
 
@@ -62,7 +62,7 @@ public class UserController {
     @PutMapping("/user/{userId}/block")
     public ResponseEntity<UserDto> blockUser(@PathVariable UUID userId) {
 
-        User user = userService.getUserById(userId);
+        User user = userService.blockUser(userId);
 
         UserDto userDto = userMapper.toDto(user);
 
