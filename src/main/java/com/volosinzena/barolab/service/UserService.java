@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface UserService {
 
+    User signUp(String login, String email, String password);
+
     User getUserById(UUID userId);
 
     List<User> getAllUsers();

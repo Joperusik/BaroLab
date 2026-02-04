@@ -1,11 +1,13 @@
 package com.volosinzena.barolab.controller;
 
 
+import com.volosinzena.barolab.controller.dto.SignUpRequestDto;
 import com.volosinzena.barolab.controller.dto.UserDto;
 import com.volosinzena.barolab.mapper.UserMapper;
 import com.volosinzena.barolab.service.UserService;
 import com.volosinzena.barolab.service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,19 @@ public class UserController {
     public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<UserDto> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
+        User user =
+                userService.signUp(
+                        signUpRequestDto.getLogin(),
+                        signUpRequestDto.getEmail(),
+                        signUpRequestDto.getPassword());
+
+        UserDto userDto = userMapper.toDto(user);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
 
