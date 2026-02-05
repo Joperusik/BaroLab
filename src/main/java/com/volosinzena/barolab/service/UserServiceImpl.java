@@ -28,6 +28,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signUp(String login, String email, String password) {
 
+
+
         log.info("SignUp Request");
         Optional<User> optionalUser = userHashMap.values().stream()
                 .filter(user -> user.getLogin().equals(login)).findFirst();
@@ -37,8 +39,10 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = new User();
+        user.setId(UUID.randomUUID());
         user.setLogin(login);
         user.setEmail(email);
+        user.setPassword(password);
 
         Instant now = Instant.now();
 
@@ -47,7 +51,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus(String.valueOf(Status.ACTIVE));
         user.setRole(String.valueOf(Role.USER));
 
-        userHashMap.put(UUID.fromString(user.getId()), user);
+        userHashMap.put(user.getId(), user);
 
         log.info("Succsessfully created");
 
@@ -72,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
         user.setStatus(String.valueOf(Status.ACTIVE));
         user.setUpdatedAt(Instant.now());
-        userHashMap.put(UUID.fromString(user.getId()), user);
+        userHashMap.put(user.getId(), user);
 
         return user;
     }
@@ -83,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
         user.setStatus(String.valueOf(Status.BLOCKED));
         user.setUpdatedAt(Instant.now());
-        userHashMap.put(UUID.fromString(user.getId()), user);
+        userHashMap.put(user.getId(), user);
 
         return user;
     }

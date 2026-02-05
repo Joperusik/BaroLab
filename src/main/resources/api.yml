@@ -925,6 +925,7 @@ components:
           type: string
           format: password
           example: qwerty123456
+          writeOnly: true
 
     Error:
       type: object
