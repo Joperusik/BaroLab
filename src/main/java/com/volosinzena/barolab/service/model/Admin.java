@@ -1,19 +1,16 @@
-package com.volosinzena.barolab.controller.dto;
+package com.volosinzena.barolab.service.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class AdminDto {
+public class Admin {
 
     private UUID id;
     private String login;
+    private String password;
     private String status;
     private String role;
     private Instant createdAt;
