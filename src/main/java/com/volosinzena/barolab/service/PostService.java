@@ -1,0 +1,19 @@
+package com.volosinzena.barolab.service;
+
+import com.volosinzena.barolab.service.model.Post;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface PostService {
+
+    List<Post> getAllPosts();
+
+    Post createPost(Post post);
+
+    Post getPostById(UUID postId);
+
+    Post activatePost(UUID postId);
+
+    Post blockPost(UUID postId);
+}
