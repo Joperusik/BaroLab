@@ -18,8 +18,8 @@ public class UserDto {
     private String email;
     @JsonIgnore
     private String password;
-    private String status;
-    private String role;
+    private Status status;
+    private Role role;
     private Instant createdAt;
     private Instant updatedAt;
 }

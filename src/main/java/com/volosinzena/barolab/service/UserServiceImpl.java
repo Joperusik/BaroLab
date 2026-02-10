@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService {
 
         user.setCreatedAt(now);
         user.setUpdatedAt(now);
-        user.setStatus(String.valueOf(Status.ACTIVE));
-        user.setRole(String.valueOf(Role.USER));
+        user.setStatus(Status.ACTIVE);
+        user.setRole(Role.USER);
 
         userHashMap.put(user.getId(), user);
 
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public User activateUser(UUID userId) {
         User user = userHashMap.get(userId);
 
-        user.setStatus(String.valueOf(Status.ACTIVE));
+        user.setStatus(Status.ACTIVE);
         user.setUpdatedAt(Instant.now());
         userHashMap.put(user.getId(), user);
 
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
     public User blockUser(UUID userId) {
         User user = userHashMap.get(userId);
 
-        user.setStatus(String.valueOf(Status.BLOCKED));
+        user.setStatus(Status.BLOCKED);
         user.setUpdatedAt(Instant.now());
         userHashMap.put(user.getId(), user);
 

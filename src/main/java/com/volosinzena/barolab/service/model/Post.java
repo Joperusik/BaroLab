@@ -11,7 +11,7 @@ public class Post {
     private UUID id;
     private UUID userId;
     private Integer rating;
-    private String status;
+    private Status status;
     private String title;
     private String content;
     private Instant createdAt;
