@@ -30,7 +30,7 @@ public class PostServiceImpl implements PostService {
         Instant now = Instant.now();
         post.setCreatedAt(now);
         post.setUpdatedAt(now);
-        post.setStatus(String.valueOf(Status.ACTIVE));
+        post.setStatus(Status.ACTIVE);
 
         if (post.getRating() == null) {
             post.setRating(0);
@@ -55,7 +55,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post activatePost(UUID postId) {
         Post post = getPostById(postId);
-        post.setStatus(String.valueOf(Status.ACTIVE));
+        post.setStatus(Status.ACTIVE);
         post.setUpdatedAt(Instant.now());
         postHashMap.put(post.getId(), post);
         return post;
@@ -64,7 +64,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post blockPost(UUID postId) {
         Post post = getPostById(postId);
-        post.setStatus(String.valueOf(Status.BLOCKED));
+        post.setStatus(Status.BLOCKED);
         post.setUpdatedAt(Instant.now());
         postHashMap.put(post.getId(), post);
         return post;

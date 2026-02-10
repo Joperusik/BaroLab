@@ -17,8 +17,8 @@ public class UserMapper {
         user.setEmail(dto.getEmail());
         user.setCreatedAt(dto.getCreatedAt());
         user.setUpdatedAt(dto.getUpdatedAt());
-        user.setStatus(String.valueOf(Status.valueOf(dto.getStatus())));
-        user.setRole(String.valueOf(Role.valueOf(dto.getRole())));
+        user.setStatus(Status.valueOf(String.valueOf(Status.valueOf(String.valueOf(dto.getStatus())))));
+        user.setRole(Role.valueOf(String.valueOf(Role.valueOf(String.valueOf(dto.getRole())))));
 
         return user;
     }
@@ -31,8 +31,8 @@ public class UserMapper {
         dto.setEmail(user.getEmail());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
-        dto.setStatus(String.valueOf(com.volosinzena.barolab.controller.dto.Status.valueOf(user.getStatus())));
-        dto.setRole(String.valueOf(com.volosinzena.barolab.controller.dto.Role.valueOf(user.getRole())));
+        dto.setStatus(com.volosinzena.barolab.controller.dto.Status.valueOf(String.valueOf(Status.valueOf(user.getStatus().name()))));
+        dto.setRole(com.volosinzena.barolab.controller.dto.Role.valueOf(user.getRole().name()));
 
         return dto;
     }

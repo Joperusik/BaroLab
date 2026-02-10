@@ -14,7 +14,7 @@ public class CommentDto {
     private String post_id;
     private String user_id;
     private String text;
-    private String status;
+    private Status status;
     private Instant createdAt;
     private Instant updatedAt;
 

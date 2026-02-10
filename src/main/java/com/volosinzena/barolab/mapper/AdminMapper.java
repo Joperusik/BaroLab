@@ -17,10 +17,10 @@ public class AdminMapper {
         admin.setCreatedAt(dto.getCreatedAt());
         admin.setUpdatedAt(dto.getUpdatedAt());
         if (dto.getStatus() != null) {
-            admin.setStatus(String.valueOf(Status.valueOf(dto.getStatus())));
+            admin.setStatus((Status.valueOf(dto.getStatus().name())));
         }
         if (dto.getRole() != null) {
-            admin.setRole(String.valueOf(Role.valueOf(dto.getRole())));
+            admin.setRole((Role.valueOf(dto.getRole().name())));
         }
 
         return admin;
@@ -34,10 +34,10 @@ public class AdminMapper {
         dto.setCreatedAt(admin.getCreatedAt());
         dto.setUpdatedAt(admin.getUpdatedAt());
         if (admin.getStatus() != null) {
-            dto.setStatus(String.valueOf(com.volosinzena.barolab.controller.dto.Status.valueOf(admin.getStatus())));
+            dto.setStatus(com.volosinzena.barolab.controller.dto.Status.valueOf(admin.getStatus().name()));
         }
         if (admin.getRole() != null) {
-            dto.setRole(String.valueOf(com.volosinzena.barolab.controller.dto.Role.valueOf(admin.getRole())));
+            dto.setRole(com.volosinzena.barolab.controller.dto.Role.valueOf(admin.getRole().name()));
         }
 
         return dto;

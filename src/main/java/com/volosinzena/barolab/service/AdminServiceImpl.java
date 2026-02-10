@@ -39,9 +39,9 @@ public class AdminServiceImpl implements AdminService {
         Instant now = Instant.now();
         admin.setCreatedAt(now);
         admin.setUpdatedAt(now);
-        admin.setStatus(String.valueOf(Status.ACTIVE));
+        admin.setStatus(Status.ACTIVE);
         if (admin.getRole() == null) {
-            admin.setRole(String.valueOf(Role.ADMIN));
+            admin.setRole(Role.ADMIN);
         }
 
         adminHashMap.put(admin.getId(), admin);
@@ -69,7 +69,7 @@ public class AdminServiceImpl implements AdminService {
             throw new AdminNotFoundException(adminId);
         }
 
-        admin.setStatus(String.valueOf(Status.ACTIVE));
+        admin.setStatus(Status.ACTIVE);
         admin.setUpdatedAt(Instant.now());
         adminHashMap.put(admin.getId(), admin);
 
@@ -83,7 +83,7 @@ public class AdminServiceImpl implements AdminService {
             throw new AdminNotFoundException(adminId);
         }
 
-        admin.setStatus(String.valueOf(Status.BLOCKED));
+        admin.setStatus(Status.BLOCKED);
         admin.setUpdatedAt(Instant.now());
         adminHashMap.put(admin.getId(), admin);
 
