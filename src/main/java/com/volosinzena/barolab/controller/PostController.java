@@ -1,5 +1,6 @@
 package com.volosinzena.barolab.controller;
 
+import com.volosinzena.barolab.controller.dto.CreatePostDto;
 import com.volosinzena.barolab.controller.dto.PostDto;
 import com.volosinzena.barolab.mapper.PostMapper;
 import com.volosinzena.barolab.service.PostService;
@@ -25,12 +26,14 @@ public class PostController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
-        Post post = postMapper.toDomain(postDto);
-        Post createdPost = postService.createPost(post);
-        PostDto responseDto = postMapper.toDto(createdPost);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto); // api.yml says 200 OK for create, usually 201
-                                                                       // but following spec or controller pattern
+    public ResponseEntity<PostDto> createPost(@RequestBody CreatePostDto createPostDto) {
+        Post post = postService.createPost(
+                createPostDto.getTitle(),
+                createPostDto.getContent()
+        );
+
+        PostDto responseDto = postMapper.toDto(post);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping("/post")

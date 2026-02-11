@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = new User();
-        user.setId(UUID.randomUUID());
         user.setLogin(login);
         user.setEmail(email);
         user.setPassword(password);

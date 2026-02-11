@@ -23,18 +23,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(Post post) {
+    public Post createPost(String title, String content) {
         log.info("Create Post Request");
 
-        post.setId(UUID.randomUUID());
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+
         Instant now = Instant.now();
         post.setCreatedAt(now);
         post.setUpdatedAt(now);
         post.setStatus(Status.ACTIVE);
-
-        if (post.getRating() == null) {
-            post.setRating(0);
-        }
+        post.setRating(0);
 
         postHashMap.put(post.getId(), post);
 

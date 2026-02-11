@@ -22,8 +22,10 @@ public class AdminEntity {
     @Column
     private String password;
     @Column
+    @Enumerated(EnumType.STRING)
     private Status status;
     @Column
+    @Enumerated(EnumType.STRING)
     private Role role;
     @Column
     private Instant createdAt;

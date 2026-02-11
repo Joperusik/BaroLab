@@ -9,7 +9,7 @@ public interface PostService {
 
     List<Post> getAllPosts();
 
-    Post createPost(Post post);
+    Post createPost(String title, String content);
 
     Post getPostById(UUID postId);
 

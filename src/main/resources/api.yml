@@ -769,13 +769,16 @@ components:
           type: string
           format: uuid
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
         user_id:
           type: string
           format: uuid
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
         rating:
           type: integer
           example: 0
+          readOnly: true
         status:
           type: string 
           enum: [ ACTIVE, BLOCKED ]
@@ -786,15 +789,17 @@ components:
           example: Post name
         content:
           type: string 
-          example: description
+          example: content
         created_at:
           type: string
           format: date-time
           example: 2021-09-20T12:00:00Z
+          readOnly: true
         updated_at:
           type: string
           format: date-time
           example: 2021-09-20T13:41:22Z
+          readOnly: true
 
     User:
       type: object
