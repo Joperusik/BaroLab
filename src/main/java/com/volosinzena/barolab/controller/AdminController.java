@@ -1,6 +1,7 @@
 package com.volosinzena.barolab.controller;
 
 import com.volosinzena.barolab.controller.dto.AdminDto;
+import com.volosinzena.barolab.controller.dto.AdminSignUpRequestDto;
 import com.volosinzena.barolab.mapper.AdminMapper;
 import com.volosinzena.barolab.service.AdminService;
 import com.volosinzena.barolab.service.model.Admin;
@@ -25,10 +26,13 @@ public class AdminController {
     }
 
     @PostMapping("/admins")
-    public ResponseEntity<AdminDto> createAdmin(@RequestBody AdminDto adminDto) {
-        Admin admin = adminMapper.toDomain(adminDto);
-        Admin createdAdmin = adminService.createAdmin(admin);
-        AdminDto responseDto = adminMapper.toDto(createdAdmin);
+    public ResponseEntity<AdminDto> createAdmin(@RequestBody AdminSignUpRequestDto adminSignUpRequest) {
+        Admin admin = adminService.createAdmin(
+                adminSignUpRequest.getLogin(),
+                adminSignUpRequest.getPassword()
+        );
+
+        AdminDto responseDto = adminMapper.toDto(admin);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 

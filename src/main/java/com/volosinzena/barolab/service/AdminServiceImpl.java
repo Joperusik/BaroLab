@@ -2,10 +2,14 @@ package com.volosinzena.barolab.service;
 
 import com.volosinzena.barolab.exception.AdminAlreadyExistsException;
 import com.volosinzena.barolab.exception.AdminNotFoundException;
+import com.volosinzena.barolab.mapper.AdminMapper;
+import com.volosinzena.barolab.repository.AdminRepository;
+import com.volosinzena.barolab.repository.entity.AdminEntity;
+import com.volosinzena.barolab.repository.entity.Role;
 import com.volosinzena.barolab.service.model.Admin;
-import com.volosinzena.barolab.service.model.Role;
 import com.volosinzena.barolab.service.model.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,6 +22,15 @@ import java.util.UUID;
 @Service
 public class AdminServiceImpl implements AdminService {
 
+    private AdminRepository adminRepository;
+    private AdminMapper adminMapper;
+
+    @Autowired
+    public AdminServiceImpl(AdminRepository adminRepository, AdminMapper adminMapper) {
+        this.adminRepository = adminRepository;
+        this.adminMapper = adminMapper;
+    }
+
     private final HashMap<UUID, Admin> adminHashMap = new HashMap<>();
 
     @Override
@@ -26,29 +39,31 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Admin createAdmin(Admin admin) {
+    public Admin createAdmin(String login, String password) {
         log.info("Create Admin Request");
-        Optional<Admin> optionalAdmin = adminHashMap.values().stream()
-                .filter(a -> a.getLogin().equals(admin.getLogin())).findFirst();
+
+        Optional<AdminEntity> optionalAdmin = adminRepository.findByLogin(login);
 
         if (optionalAdmin.isPresent()) {
-            throw new AdminAlreadyExistsException(admin.getLogin());
+            throw new AdminAlreadyExistsException(login);
         }
 
-        admin.setId(UUID.randomUUID());
+        AdminEntity adminEntity = new AdminEntity();
+
+        adminEntity.setLogin(login);
+        adminEntity.setPassword(password);
         Instant now = Instant.now();
-        admin.setCreatedAt(now);
-        admin.setUpdatedAt(now);
-        admin.setStatus(Status.ACTIVE);
-        if (admin.getRole() == null) {
-            admin.setRole(Role.ADMIN);
-        }
+        adminEntity.setCreatedAt(now);
+        adminEntity.setUpdatedAt(now);
+        adminEntity.setStatus(com.volosinzena.barolab.repository.entity.Status.ACTIVE);
+        adminEntity.setRole(Role.ADMIN);
 
-        adminHashMap.put(admin.getId(), admin);
+
+        AdminEntity saveAdminEntity = adminRepository.save(adminEntity);
 
         log.info("Successfully created admin");
 
-        return admin;
+        return adminMapper.toDomain(saveAdminEntity);
     }
 
     @Override

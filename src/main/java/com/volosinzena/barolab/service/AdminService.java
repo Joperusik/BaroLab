@@ -9,7 +9,7 @@ public interface AdminService {
 
     List<Admin> getAllAdmins();
 
-    Admin createAdmin(Admin admin);
+    Admin createAdmin(String login, String password);
 
     Admin getAdminById(UUID adminId);
 

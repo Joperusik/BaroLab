@@ -1,6 +1,7 @@
 package com.volosinzena.barolab.mapper;
 
 import com.volosinzena.barolab.controller.dto.AdminDto;
+import com.volosinzena.barolab.repository.entity.AdminEntity;
 import com.volosinzena.barolab.service.model.Admin;
 import com.volosinzena.barolab.service.model.Role;
 import com.volosinzena.barolab.service.model.Status;
@@ -42,4 +43,28 @@ public class AdminMapper {
 
         return dto;
     }
+
+
+    public Admin toDomain(AdminEntity entity) {
+
+        Admin admin = new Admin();
+        admin.setId(entity.getId());
+        admin.setCreatedAt(entity.getCreatedAt());
+        admin.setUpdatedAt(entity.getUpdatedAt());
+        admin.setStatus(Status.valueOf(entity.getStatus().name()));
+
+        return admin;
+    }
+
+    public AdminEntity toEntity(Admin admin) {
+
+        AdminEntity entity = new AdminEntity();
+        entity.setId(admin.getId());
+        entity.setCreatedAt(admin.getCreatedAt());
+        entity.setUpdatedAt(admin.getUpdatedAt());
+        entity.setStatus(com.volosinzena.barolab.repository.entity.Status.valueOf(admin.getStatus().name()));
+
+        return entity;
+    }
+
 }

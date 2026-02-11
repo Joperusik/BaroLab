@@ -22,9 +22,9 @@ public class AdminEntity {
     @Column
     private String password;
     @Column
-    private String status;
+    private Status status;
     @Column
-    private String role;
+    private Role role;
     @Column
     private Instant createdAt;
     @Column
