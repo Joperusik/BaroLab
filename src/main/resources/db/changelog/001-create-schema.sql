@@ -2,9 +2,11 @@
 CREATE TABLE users
 (
     id         UUID PRIMARY KEY         DEFAULT gen_random_uuid(),
-    login      VARCHAR(255) NOT NULL UNIQUE,
-    password   VARCHAR(255) NOT NULL, -- Храните здесь хэш, а не чистый пароль
-    status     VARCHAR(50)  NOT NULL    DEFAULT 'active',
+    login      TEXT        NOT NULL UNIQUE,
+    email      TEXT        NOT NULL UNIQUE,
+    password   TEXT        NOT NULL, -- Храните здесь хэш, а не чистый пароль
+    status     TEXT        NOT NULL    DEFAULT 'active',
+    role       TEXT        NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -13,10 +15,10 @@ CREATE TABLE users
 CREATE TABLE admins
 (
     id         UUID PRIMARY KEY         DEFAULT gen_random_uuid(),
-    login      VARCHAR(255) NOT NULL UNIQUE,
-    password   VARCHAR(255) NOT NULL,
-    role       VARCHAR(50)  NOT NULL, -- Например: 'superadmin', 'moderator'
-    status     VARCHAR(50)  NOT NULL    DEFAULT 'active',
+    login      TEXT        NOT NULL UNIQUE,
+    password   TEXT        NOT NULL,
+    role       TEXT        NOT NULL, -- Например: 'superadmin', 'moderator'
+    status     TEXT        NOT NULL    DEFAULT 'active',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -28,7 +30,8 @@ CREATE TABLE posts
     id         UUID PRIMARY KEY         DEFAULT gen_random_uuid(),
     user_id    UUID        NOT NULL,
     rating     INTEGER                  DEFAULT 0,
-    status     VARCHAR(50) NOT NULL     DEFAULT 'published', -- Например: 'draft', 'published', 'archived'
+    status     TEXT        NOT NULL     DEFAULT 'published', -- Например: 'draft', 'published', 'archived'
+    title      TEXT,
     content    TEXT,                                         -- Добавил поле контента, так как пустой пост не имеет смысла
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
