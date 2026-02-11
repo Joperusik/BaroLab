@@ -16,10 +16,17 @@ public class AdminEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column
     private String login;
+    @Column
     private String password;
+    @Column
     private String status;
+    @Column
     private String role;
+    @Column
     private Instant createdAt;
+    @Column
     private Instant updatedAt;
 }
