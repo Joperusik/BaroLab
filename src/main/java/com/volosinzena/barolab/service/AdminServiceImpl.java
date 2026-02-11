@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -31,11 +28,12 @@ public class AdminServiceImpl implements AdminService {
         this.adminMapper = adminMapper;
     }
 
-    private final HashMap<UUID, Admin> adminHashMap = new HashMap<>();
-
     @Override
     public List<Admin> getAllAdmins() {
-        return adminHashMap.values().stream().toList();
+        List<AdminEntity> adminEntitieyList = adminRepository.findAll();
+
+        return adminEntitieyList.stream().map(adminEntity -> adminMapper.toDomain(adminEntity))
+                .toList();
     }
 
     @Override
@@ -68,40 +66,54 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin getAdminById(UUID adminId) {
-        Admin admin = adminHashMap.get(adminId);
+        log.info("Get Admin Request");
 
-        if (admin != null) {
-            return admin;
-        } else {
+        Optional<AdminEntity> optionalEntity = adminRepository.findById(adminId);
+
+        if (optionalEntity.isEmpty()) {
             throw new AdminNotFoundException(adminId);
         }
+
+        log.info("Successfully retrieved Admin");
+        AdminEntity adminEntity = optionalEntity.get();
+        return adminMapper.toDomain(adminEntity);
     }
 
     @Override
     public Admin activateAdmin(UUID adminId) {
-        Admin admin = adminHashMap.get(adminId);
-        if (admin == null) {
+        log.info("Activate Admin Request");
+        Optional<AdminEntity> optionalEntity = adminRepository.findById(adminId);
+        if (optionalEntity == null) {
             throw new AdminNotFoundException(adminId);
         }
 
-        admin.setStatus(Status.ACTIVE);
-        admin.setUpdatedAt(Instant.now());
-        adminHashMap.put(admin.getId(), admin);
+        AdminEntity adminEntity = optionalEntity.get();
+        adminEntity.setStatus(com.volosinzena.barolab.repository.entity.Status.ACTIVE);
+        adminEntity.setUpdatedAt(Instant.now());
 
-        return admin;
+        AdminEntity saveAdminEntity = adminRepository.save(adminEntity);
+
+        log.info("Successfully activated admin");
+
+        return adminMapper.toDomain(saveAdminEntity);
     }
 
     @Override
     public Admin blockAdmin(UUID adminId) {
-        Admin admin = adminHashMap.get(adminId);
-        if (admin == null) {
+        log.info("Block Admin Request");
+        Optional<AdminEntity> optionalEntity = adminRepository.findById(adminId);
+        if (optionalEntity == null) {
             throw new AdminNotFoundException(adminId);
         }
 
-        admin.setStatus(Status.BLOCKED);
-        admin.setUpdatedAt(Instant.now());
-        adminHashMap.put(admin.getId(), admin);
+        AdminEntity adminEntity = optionalEntity.get();
+        adminEntity.setStatus(com.volosinzena.barolab.repository.entity.Status.BLOCKED);
+        adminEntity.setUpdatedAt(Instant.now());
 
-        return admin;
+        AdminEntity saveAdminEntity = adminRepository.save(adminEntity);
+
+        log.info("Successfully blocked admin");
+
+        return adminMapper.toDomain(saveAdminEntity);
     }
 }

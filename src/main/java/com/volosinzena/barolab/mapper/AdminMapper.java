@@ -49,6 +49,8 @@ public class AdminMapper {
 
         Admin admin = new Admin();
         admin.setId(entity.getId());
+        admin.setLogin(entity.getLogin());
+        admin.setRole(Role.valueOf(entity.getRole().name()));
         admin.setCreatedAt(entity.getCreatedAt());
         admin.setUpdatedAt(entity.getUpdatedAt());
         admin.setStatus(Status.valueOf(entity.getStatus().name()));
@@ -60,6 +62,8 @@ public class AdminMapper {
 
         AdminEntity entity = new AdminEntity();
         entity.setId(admin.getId());
+        entity.setLogin(admin.getLogin());
+        entity.setRole(com.volosinzena.barolab.repository.entity.Role.valueOf(entity.getRole().name()));
         entity.setCreatedAt(admin.getCreatedAt());
         entity.setUpdatedAt(admin.getUpdatedAt());
         entity.setStatus(com.volosinzena.barolab.repository.entity.Status.valueOf(admin.getStatus().name()));
