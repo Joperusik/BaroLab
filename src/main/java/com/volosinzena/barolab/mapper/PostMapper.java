@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostMapper {
 
-
     public Post toDomain(PostDto dto) {
         if (dto == null) {
             return null;
@@ -31,16 +30,53 @@ public class PostMapper {
         }
         PostDto dto = new PostDto();
 
-                dto.setId(post.getId());
-                dto.setUserId(post.getUserId());
-                dto.setRating(post.getRating());
-                dto.setStatus(com.volosinzena.barolab.controller.dto.Status.valueOf(String.valueOf(Status.valueOf(post.getStatus().name()))));
-                dto.setTitle(post.getTitle());
-                dto.setTitle(post.getTitle());
-                dto.setContent(post.getContent());
-                dto.setCreatedAt(post.getCreatedAt());
-                dto.setUpdatedAt(post.getUpdatedAt());
+        dto.setId(post.getId());
+        dto.setUserId(post.getUserId());
+        dto.setRating(post.getRating());
+        dto.setStatus(com.volosinzena.barolab.controller.dto.Status
+                .valueOf(String.valueOf(Status.valueOf(post.getStatus().name()))));
+        dto.setTitle(post.getTitle());
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
+        dto.setCreatedAt(post.getCreatedAt());
+        dto.setUpdatedAt(post.getUpdatedAt());
 
-                return dto;
+        return dto;
+    }
+
+    public Post toDomain(com.volosinzena.barolab.repository.entity.PostEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        Post post = new Post();
+        post.setId(entity.getId());
+        post.setUserId(entity.getUserId());
+        post.setRating(entity.getRating());
+        if (entity.getStatus() != null) {
+            post.setStatus(Status.valueOf(entity.getStatus().name()));
+        }
+        post.setTitle(entity.getTitle());
+        post.setContent(entity.getContent());
+        post.setCreatedAt(entity.getCreatedAt());
+        post.setUpdatedAt(entity.getUpdatedAt());
+        return post;
+    }
+
+    public com.volosinzena.barolab.repository.entity.PostEntity toEntity(Post post) {
+        if (post == null) {
+            return null;
+        }
+        com.volosinzena.barolab.repository.entity.PostEntity entity = new com.volosinzena.barolab.repository.entity.PostEntity();
+        entity.setId(post.getId());
+        entity.setUserId(post.getUserId());
+        entity.setRating(post.getRating());
+        if (post.getStatus() != null) {
+            entity.setStatus(com.volosinzena.barolab.repository.entity.Status.valueOf(post.getStatus().name()));
+        }
+        entity.setTitle(post.getTitle());
+        entity.setContent(post.getContent());
+        entity.setCreatedAt(post.getCreatedAt());
+        entity.setUpdatedAt(post.getUpdatedAt());
+        return entity;
     }
 }
