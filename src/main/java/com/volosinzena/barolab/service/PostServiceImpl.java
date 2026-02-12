@@ -1,72 +1,91 @@
 package com.volosinzena.barolab.service;
 
 import com.volosinzena.barolab.exception.PostNotFoundException;
+import com.volosinzena.barolab.mapper.PostMapper;
+import com.volosinzena.barolab.repository.PostRepository;
 import com.volosinzena.barolab.service.model.Post;
-import com.volosinzena.barolab.service.model.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @Service
 public class PostServiceImpl implements PostService {
 
-    private final HashMap<UUID, Post> postHashMap = new HashMap<>();
+    private final PostRepository postRepository;
+    private final PostMapper postMapper;
+
+    @Autowired
+    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper) {
+        this.postRepository = postRepository;
+        this.postMapper = postMapper;
+    }
 
     @Override
     public List<Post> getAllPosts() {
-        return postHashMap.values().stream().toList();
+        return postRepository.findAll().stream()
+                .map(postMapper::toDomain)
+                .toList();
     }
 
     @Override
     public Post createPost(String title, String content) {
         log.info("Create Post Request");
 
-        Post post = new Post();
-        post.setTitle(title);
-        post.setContent(content);
+        com.volosinzena.barolab.repository.entity.PostEntity entity = new com.volosinzena.barolab.repository.entity.PostEntity();
+        entity.setTitle(title);
+        entity.setContent(content);
 
         Instant now = Instant.now();
-        post.setCreatedAt(now);
-        post.setUpdatedAt(now);
-        post.setStatus(Status.ACTIVE);
-        post.setRating(0);
+        entity.setCreatedAt(now);
+        entity.setUpdatedAt(now);
+        entity.setStatus(com.volosinzena.barolab.repository.entity.Status.ACTIVE);
+        entity.setRating(0);
 
-        postHashMap.put(post.getId(), post);
+        com.volosinzena.barolab.repository.entity.PostEntity savedEntity = postRepository.save(entity);
 
         log.info("Successfully created post");
 
-        return post;
+        return postMapper.toDomain(savedEntity);
     }
 
     @Override
     public Post getPostById(UUID postId) {
-        Post post = postHashMap.get(postId);
-        if (post == null) {
+        Optional<com.volosinzena.barolab.repository.entity.PostEntity> optionalEntity = postRepository.findById(postId);
+        if (optionalEntity.isEmpty()) {
             throw new PostNotFoundException(postId);
         }
-        return post;
+        return postMapper.toDomain(optionalEntity.get());
     }
 
     @Override
     public Post activatePost(UUID postId) {
-        Post post = getPostById(postId);
-        post.setStatus(Status.ACTIVE);
-        post.setUpdatedAt(Instant.now());
-        postHashMap.put(post.getId(), post);
-        return post;
+        Optional<com.volosinzena.barolab.repository.entity.PostEntity> optionalEntity = postRepository.findById(postId);
+        if (optionalEntity.isEmpty()) {
+            throw new PostNotFoundException(postId);
+        }
+        com.volosinzena.barolab.repository.entity.PostEntity entity = optionalEntity.get();
+        entity.setStatus(com.volosinzena.barolab.repository.entity.Status.ACTIVE);
+        entity.setUpdatedAt(Instant.now());
+        com.volosinzena.barolab.repository.entity.PostEntity savedEntity = postRepository.save(entity);
+        return postMapper.toDomain(savedEntity);
     }
 
     @Override
     public Post blockPost(UUID postId) {
-        Post post = getPostById(postId);
-        post.setStatus(Status.BLOCKED);
-        post.setUpdatedAt(Instant.now());
-        postHashMap.put(post.getId(), post);
-        return post;
+        Optional<com.volosinzena.barolab.repository.entity.PostEntity> optionalEntity = postRepository.findById(postId);
+        if (optionalEntity.isEmpty()) {
+            throw new PostNotFoundException(postId);
+        }
+        com.volosinzena.barolab.repository.entity.PostEntity entity = optionalEntity.get();
+        entity.setStatus(com.volosinzena.barolab.repository.entity.Status.BLOCKED);
+        entity.setUpdatedAt(Instant.now());
+        com.volosinzena.barolab.repository.entity.PostEntity savedEntity = postRepository.save(entity);
+        return postMapper.toDomain(savedEntity);
     }
 }

@@ -2,14 +2,14 @@ package com.volosinzena.barolab.service;
 
 import com.volosinzena.barolab.exception.UserAlreadyExistsException;
 import com.volosinzena.barolab.exception.UserNotFoundException;
-import com.volosinzena.barolab.service.model.Role;
-import com.volosinzena.barolab.service.model.Status;
+import com.volosinzena.barolab.mapper.UserMapper;
+import com.volosinzena.barolab.repository.UserRepository;
 import com.volosinzena.barolab.service.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,51 +18,57 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final HashMap<UUID, User> userHashMap = new HashMap<>();
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public List<User> getAllUsers() {
-        return userHashMap.values().stream().toList();
+        return userRepository.findAll().stream()
+                .map(userMapper::toDomain)
+                .toList();
     }
 
     @Override
     public User signUp(String login, String email, String password) {
 
-
-
         log.info("SignUp Request");
-        Optional<User> optionalUser = userHashMap.values().stream()
-                .filter(user -> user.getLogin().equals(login)).findFirst();
+        Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalUser = userRepository.findByLogin(login);
 
         if (optionalUser.isPresent()) {
             throw new UserAlreadyExistsException(login);
         }
 
-        User user = new User();
-        user.setLogin(login);
-        user.setEmail(email);
-        user.setPassword(password);
+        com.volosinzena.barolab.repository.entity.UserEntity entity = new com.volosinzena.barolab.repository.entity.UserEntity();
+        entity.setLogin(login);
+        entity.setEmail(email);
+        entity.setPassword(password);
 
         Instant now = Instant.now();
 
-        user.setCreatedAt(now);
-        user.setUpdatedAt(now);
-        user.setStatus(Status.ACTIVE);
-        user.setRole(Role.USER);
+        entity.setCreatedAt(now);
+        entity.setUpdatedAt(now);
+        entity.setStatus(com.volosinzena.barolab.repository.entity.Status.ACTIVE);
+        entity.setRole(com.volosinzena.barolab.repository.entity.Role.USER);
 
-        userHashMap.put(user.getId(), user);
+        com.volosinzena.barolab.repository.entity.UserEntity savedEntity = userRepository.save(entity);
 
         log.info("Succsessfully created");
 
-        return user;
+        return userMapper.toDomain(savedEntity);
     }
 
     @Override
     public User getUserById(UUID userId) {
-        User user = userHashMap.get(userId);
+        Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalEntity = userRepository.findById(userId);
 
-        if (user != null) {
-            return user;
+        if (optionalEntity.isPresent()) {
+            return userMapper.toDomain(optionalEntity.get());
         } else {
             throw new UserNotFoundException(userId);
         }
@@ -71,23 +77,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User activateUser(UUID userId) {
-        User user = userHashMap.get(userId);
+        Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalEntity = userRepository.findById(userId);
 
-        user.setStatus(Status.ACTIVE);
-        user.setUpdatedAt(Instant.now());
-        userHashMap.put(user.getId(), user);
+        if (optionalEntity.isEmpty()) {
+            throw new UserNotFoundException(userId);
+        }
 
-        return user;
+        com.volosinzena.barolab.repository.entity.UserEntity entity = optionalEntity.get();
+
+        entity.setStatus(com.volosinzena.barolab.repository.entity.Status.ACTIVE);
+        entity.setUpdatedAt(Instant.now());
+        com.volosinzena.barolab.repository.entity.UserEntity savedEntity = userRepository.save(entity);
+
+        return userMapper.toDomain(savedEntity);
     }
 
     @Override
     public User blockUser(UUID userId) {
-        User user = userHashMap.get(userId);
+        Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalEntity = userRepository.findById(userId);
 
-        user.setStatus(Status.BLOCKED);
-        user.setUpdatedAt(Instant.now());
-        userHashMap.put(user.getId(), user);
+        if (optionalEntity.isEmpty()) {
+            throw new UserNotFoundException(userId);
+        }
 
-        return user;
+        com.volosinzena.barolab.repository.entity.UserEntity entity = optionalEntity.get();
+
+        entity.setStatus(com.volosinzena.barolab.repository.entity.Status.BLOCKED);
+        entity.setUpdatedAt(Instant.now());
+        com.volosinzena.barolab.repository.entity.UserEntity savedEntity = userRepository.save(entity);
+
+        return userMapper.toDomain(savedEntity);
     }
 }
