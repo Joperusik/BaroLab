@@ -1,5 +1,5 @@
 package com.volosinzena.barolab.repository.entity;
 
 public enum Role {
-    USER, SUPERUSER, ADMIN
+    USER, SUPERUSER, ADMIN,  SUPER_ADMIN;
 }

@@ -1,5 +1,5 @@
 package com.volosinzena.barolab.service.model;
 
 public enum Role {
-    USER, SUPERUSER, ADMIN
+    USER, SUPERUSER, ADMIN,  SUPER_ADMIN;
 }
