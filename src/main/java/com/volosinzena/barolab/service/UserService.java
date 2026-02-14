@@ -1,6 +1,5 @@
 package com.volosinzena.barolab.service;
 
-
 import com.volosinzena.barolab.service.model.User;
 
 import java.util.List;
@@ -18,4 +17,5 @@ public interface UserService {
 
     User blockUser(UUID userId);
 
+    User login(String login, String password);
 }
