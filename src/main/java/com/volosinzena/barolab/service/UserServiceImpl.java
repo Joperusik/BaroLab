@@ -20,11 +20,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,
+            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserService {
         com.volosinzena.barolab.repository.entity.UserEntity entity = new com.volosinzena.barolab.repository.entity.UserEntity();
         entity.setLogin(login);
         entity.setEmail(email);
-        entity.setPassword(password);
+        entity.setPassword(passwordEncoder.encode(password));
 
         Instant now = Instant.now();
 
@@ -107,5 +110,19 @@ public class UserServiceImpl implements UserService {
         com.volosinzena.barolab.repository.entity.UserEntity savedEntity = userRepository.save(entity);
 
         return userMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public User login(String login, String password) {
+        com.volosinzena.barolab.repository.entity.UserEntity entity = userRepository.findByLogin(login)
+                .orElseThrow(() -> new UserNotFoundException(login)); // Assuming constructor accepting String exists,
+                                                                      // otherwise modify
+
+        if (!passwordEncoder.matches(password, entity.getPassword())) {
+            throw new RuntimeException("Invalid password"); // Better to use a specific exception like
+                                                            // BadCredentialsException
+        }
+
+        return userMapper.toDomain(entity);
     }
 }
