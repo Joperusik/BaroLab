@@ -11,18 +11,6 @@ CREATE TABLE users
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Таблица Admins (Отдельная сущность, как в запросе)
-CREATE TABLE admins
-(
-    id         UUID PRIMARY KEY         DEFAULT gen_random_uuid(),
-    login      TEXT        NOT NULL UNIQUE,
-    password   TEXT        NOT NULL,
-    role       TEXT        NOT NULL, -- Например: 'superadmin', 'moderator'
-    status     TEXT        NOT NULL    ,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
 -- 3. Таблица Posts
 -- Связь: Один User -> Много Post
 CREATE TABLE posts
