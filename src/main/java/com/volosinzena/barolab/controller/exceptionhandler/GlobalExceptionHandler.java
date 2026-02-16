@@ -25,6 +25,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
     }
 
+    @ExceptionHandler(com.volosinzena.barolab.exception.BadCredentialsException.class)
+    public ResponseEntity<ErrorDto> handleBadCredentialsException(
+            com.volosinzena.barolab.exception.BadCredentialsException e) {
+        log.error("Bad credentials", e);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleException(Exception e) {
         log.error("Internal server error", e);

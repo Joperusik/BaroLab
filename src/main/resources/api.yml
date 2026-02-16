@@ -727,7 +727,7 @@ components:
           readOnly: true
         role:
           type: string
-          enum: [ USER, VIP ]
+          enum: [ USER, SUPERUSER, ADMIN, SUPER_ADMIN ]
           example: USER
         created_at:
           type: string

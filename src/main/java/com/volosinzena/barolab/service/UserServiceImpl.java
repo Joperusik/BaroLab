@@ -73,8 +73,7 @@ public class UserServiceImpl implements UserService {
         // otherwise modify
 
         if (!passwordEncoder.matches(password, entity.getPassword())) {
-            throw new RuntimeException("Invalid password"); // Better to use a specific exception like
-            // BadCredentialsException
+            throw new com.volosinzena.barolab.exception.BadCredentialsException("Invalid password");
         }
 
         return userMapper.toDomain(entity);
