@@ -96,4 +96,16 @@ public class UserController {
 
     }
 
+    @PutMapping("/user/{userId}/role")
+    public ResponseEntity<UserDto> updateUserRole(@PathVariable UUID userId,
+            @RequestBody com.volosinzena.barolab.controller.dto.Role role) {
+
+        User user = userService.updateRole(userId, role);
+
+        UserDto userDto = userMapper.toDto(user);
+
+        return ResponseEntity.ok(userDto);
+
+    }
+
 }

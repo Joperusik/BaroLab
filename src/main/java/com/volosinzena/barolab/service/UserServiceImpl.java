@@ -126,5 +126,21 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDomain(savedEntity);
     }
 
+    @Override
+    public User updateRole(UUID userId, com.volosinzena.barolab.controller.dto.Role role) {
+        Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalEntity = userRepository.findById(userId);
+
+        if (optionalEntity.isEmpty()) {
+            throw new UserNotFoundException(userId);
+        }
+
+        com.volosinzena.barolab.repository.entity.UserEntity entity = optionalEntity.get();
+
+        entity.setRole(com.volosinzena.barolab.repository.entity.Role.valueOf(role.name()));
+        entity.setUpdatedAt(Instant.now());
+        com.volosinzena.barolab.repository.entity.UserEntity savedEntity = userRepository.save(entity);
+
+        return userMapper.toDomain(savedEntity);
+    }
 
 }

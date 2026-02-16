@@ -8,7 +8,7 @@ servers:
   - url: http://localhost:8080
 
 security:
-  - security: [ { bearerAuth: [ ] } ]
+  - bearerAuth: []
 
 
 tags:
@@ -181,6 +181,50 @@ paths:
         - $ref: '#/components/parameters/userId'
       tags:
         - Users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/{userId}/role:
+    put:
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              enum: [ USER, SUPERUSER, ADMIN, SUPER_ADMIN ]
       responses:
         200:
           description: OK

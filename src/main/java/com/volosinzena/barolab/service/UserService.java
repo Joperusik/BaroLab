@@ -17,5 +17,7 @@ public interface UserService {
 
     User blockUser(UUID userId);
 
+    User updateRole(UUID userId, com.volosinzena.barolab.controller.dto.Role role);
+
     User login(String login, String password);
 }
