@@ -54,7 +54,9 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 "/ping",
                                                 "/login",
-                                                "/sign-up")
+                                                "/sign-up",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
