@@ -67,6 +67,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User login(String login, String password) {
+        com.volosinzena.barolab.repository.entity.UserEntity entity = userRepository.findByLogin(login)
+                .orElseThrow(() -> new UserNotFoundException(login)); // Assuming constructor accepting String exists,
+        // otherwise modify
+
+        if (!passwordEncoder.matches(password, entity.getPassword())) {
+            throw new RuntimeException("Invalid password"); // Better to use a specific exception like
+            // BadCredentialsException
+        }
+
+        return userMapper.toDomain(entity);
+    }
+
+    @Override
     public User getUserById(UUID userId) {
         Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalEntity = userRepository.findById(userId);
 
@@ -112,17 +126,5 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDomain(savedEntity);
     }
 
-    @Override
-    public User login(String login, String password) {
-        com.volosinzena.barolab.repository.entity.UserEntity entity = userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserNotFoundException(login)); // Assuming constructor accepting String exists,
-                                                                      // otherwise modify
 
-        if (!passwordEncoder.matches(password, entity.getPassword())) {
-            throw new RuntimeException("Invalid password"); // Better to use a specific exception like
-                                                            // BadCredentialsException
-        }
-
-        return userMapper.toDomain(entity);
-    }
 }
