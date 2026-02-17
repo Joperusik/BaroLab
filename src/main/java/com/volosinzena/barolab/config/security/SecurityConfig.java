@@ -3,6 +3,7 @@ package com.volosinzena.barolab.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,6 +50,7 @@ public class SecurityConfig {
                                                                                                 new HttpSessionSecurityContextRepository())))
                                 .authorizeHttpRequests(
                                                 requests -> requests
+                                                                // Public endpoints (no auth required)
                                                                 .requestMatchers(
                                                                                 "/ping",
                                                                                 "/login",
@@ -56,28 +58,38 @@ public class SecurityConfig {
                                                                                 "/swagger-ui/**",
                                                                                 "/v3/api-docs/**")
                                                                 .permitAll()
-                                                                // SUPER_ADMIN only
-                                                                .requestMatchers(
+
+                                                                // SUPER_ADMIN — user management (role, activate, block)
+                                                                .requestMatchers(HttpMethod.PUT,
                                                                                 "/user/*/role",
                                                                                 "/user/*/activate",
                                                                                 "/user/*/block")
                                                                 .hasAuthority("SUPER_ADMIN")
-                                                                // ADMIN and above
-                                                                .requestMatchers(
+
+                                                                // ADMIN — content moderation (activate/block posts &
+                                                                // comments)
+                                                                .requestMatchers(HttpMethod.PUT,
                                                                                 "/post/*/activate",
                                                                                 "/post/*/block",
                                                                                 "/post/*/comment/*/activate",
                                                                                 "/post/*/comment/*/block")
                                                                 .hasAuthority("ADMIN")
-                                                                // SUPERUSER and above
-                                                                .requestMatchers(
-                                                                                "/users")
-                                                                .hasAuthority("SUPERUSER")
-                                                                // USER and above (Authenticated)
-                                                                .requestMatchers(
-                                                                                "/user/**",
-                                                                                "/post/**")
+
+                                                                // USER — read access to posts, users, comments + create
+                                                                // posts and comments
+                                                                .requestMatchers(HttpMethod.GET,
+                                                                                "/users",
+                                                                                "/user/*",
+                                                                                "/post",
+                                                                                "/post/*",
+                                                                                "/post/*/comment",
+                                                                                "/post/*/comment/*")
                                                                 .hasAuthority("USER")
+                                                                .requestMatchers(HttpMethod.POST,
+                                                                                "/post",
+                                                                                "/post/*/comment")
+                                                                .hasAuthority("USER")
+
                                                                 .anyRequest()
                                                                 .authenticated())
                                 .cors(
