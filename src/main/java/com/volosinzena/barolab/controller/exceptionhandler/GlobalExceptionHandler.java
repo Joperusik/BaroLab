@@ -32,6 +32,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
     }
 
+    @ExceptionHandler(com.volosinzena.barolab.exception.UserBlockedException.class)
+    public ResponseEntity<ErrorDto> handleUserBlockedException(
+            com.volosinzena.barolab.exception.UserBlockedException e) {
+        log.error("User is blocked", e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorDto(e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleException(Exception e) {
         log.error("Internal server error", e);

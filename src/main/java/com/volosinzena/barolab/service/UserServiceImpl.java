@@ -76,6 +76,10 @@ public class UserServiceImpl implements UserService {
             throw new com.volosinzena.barolab.exception.BadCredentialsException("Invalid password");
         }
 
+        if (entity.getStatus() == com.volosinzena.barolab.repository.entity.Status.BLOCKED) {
+            throw new com.volosinzena.barolab.exception.UserBlockedException(login);
+        }
+
         return userMapper.toDomain(entity);
     }
 
