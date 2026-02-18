@@ -25,7 +25,7 @@ public class PostController {
         this.postMapper = postMapper;
     }
 
-    @PostMapping("/post")
+    @PostMapping("/posts")
     public ResponseEntity<PostDto> createPost(@RequestBody CreatePostDto createPostDto) {
         Post post = postService.createPost(
                 createPostDto.getTitle(),
@@ -36,7 +36,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @GetMapping("/post")
+    @GetMapping("/posts")
     public ResponseEntity<List<PostDto>> getPosts() {
         List<Post> postList = postService.getAllPosts();
         List<PostDto> postDtoList = postList.stream().map(postMapper::toDto).toList();
