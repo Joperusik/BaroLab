@@ -19,6 +19,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
     }
 
+    @ExceptionHandler(com.volosinzena.barolab.exception.CommentNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleCommentNotFoundException(
+            com.volosinzena.barolab.exception.CommentNotFoundException e) {
+        log.error("Comment not found", e);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
+    }
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorDto> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         log.error("User already exists", e);

@@ -73,22 +73,24 @@ public class SecurityConfig {
                                                                                 "/post/*/block",
                                                                                 "/post/*/comment/*/activate",
                                                                                 "/post/*/comment/*/block")
-                                                                .hasAuthority("ADMIN")
+                                                                .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
 
                                                                 // USER — read access to posts, users, comments + create
                                                                 // posts and comments
                                                                 .requestMatchers(HttpMethod.GET,
                                                                                 "/users",
                                                                                 "/user/*",
-                                                                                "/post",
+                                                                                "/posts",
                                                                                 "/post/*",
                                                                                 "/post/*/comment",
                                                                                 "/post/*/comment/*")
-                                                                .hasAuthority("USER")
+                                                                .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
+                                                                                "SUPER_ADMIN")
                                                                 .requestMatchers(HttpMethod.POST,
-                                                                                "/post",
+                                                                                "/posts",
                                                                                 "/post/*/comment")
-                                                                .hasAuthority("USER")
+                                                                .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
+                                                                                "SUPER_ADMIN")
 
                                                                 .anyRequest()
                                                                 .authenticated())

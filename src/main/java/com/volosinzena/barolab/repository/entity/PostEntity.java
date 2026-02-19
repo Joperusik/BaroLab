@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,8 +18,10 @@ public class PostEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column
-    private UUID userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     @Column
     private Integer rating;
     @Column
@@ -32,4 +35,7 @@ public class PostEntity {
     private Instant createdAt;
     @Column
     private Instant updatedAt;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentEntity> comments;
 }

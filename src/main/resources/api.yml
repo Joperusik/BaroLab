@@ -20,6 +20,7 @@ tags:
 paths:
   /login:
     post:
+      operationId: login
       security: []
       tags:
         - Users
@@ -55,6 +56,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /sign-up:
     post:
+      operationId: signUp
       security: []
       tags:
         - Users
@@ -64,8 +66,8 @@ paths:
             schema:
               $ref: '#/components/schemas/SignUpRequest'
       responses:
-        200:
-          description: OK
+        201:
+          description: Created
           content:
             application/json:
               schema:
@@ -85,6 +87,7 @@ paths:
 
   /users:
     get:
+      operationId: getAllUsers
       summary: Get all Users
       tags:
         - Users
@@ -112,6 +115,7 @@ paths:
 
   /user/{userId}:
     get:
+      operationId: getUserById
       parameters:
         - $ref: '#/components/parameters/userId'
       summary: Get User by ID
@@ -139,6 +143,7 @@ paths:
 
   /user/{userId}/activate:
     put:
+      operationId: activateUser
       parameters:
         - $ref: '#/components/parameters/userId'
       tags:
@@ -177,6 +182,7 @@ paths:
 
   /user/{userId}/block:
     put:
+      operationId: blockUser
       parameters:
         - $ref: '#/components/parameters/userId'
       tags:
@@ -215,6 +221,7 @@ paths:
 
   /user/{userId}/role:
     put:
+      operationId: updateUserRole
       parameters:
         - $ref: '#/components/parameters/userId'
       tags:
@@ -259,16 +266,21 @@ paths:
 
   /posts:
     post:
+      operationId: createPost
       tags:
         - Posts
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: '#/components/schemas/CreatePostRequest'
       responses:
         200:
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
         400:
           description: Bad Request
           content:
@@ -289,6 +301,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     get:
+      operationId: getAllPosts
       summary: Get all Posts
       tags:
         - Posts
@@ -316,6 +329,7 @@ paths:
 
   /post/{postId}:
     get:
+      operationId: getPostById
       parameters:
         - $ref: '#/components/parameters/postId'
       summary: Get Post by ID
@@ -337,6 +351,7 @@ paths:
 
   /post/{postId}/activate:
     put:
+      operationId: activatePost
       parameters:
         - $ref: '#/components/parameters/postId'
       tags:
@@ -375,6 +390,7 @@ paths:
 
   /post/{postId}/block:
     put:
+      operationId: blockPost
       parameters:
         - $ref: '#/components/parameters/postId'
       tags:
@@ -413,6 +429,7 @@ paths:
 
   /post/{postId}/comment:
     post:
+      operationId: createComment
       parameters:
         - $ref: '#/components/parameters/postId'
       tags:
@@ -421,10 +438,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: '#/components/schemas/CreateCommentRequest'
       responses:
         200:
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
         400:
           description: Bad Request
           content:
@@ -445,7 +466,10 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     get:
-      summary: Get all Comments
+      operationId: getCommentsByPostId
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      summary: Get all Comments for a Post
       tags:
         - Comments
       responses:
@@ -472,6 +496,7 @@ paths:
 
   /post/{postId}/comment/{commentId}:
     get:
+      operationId: getCommentById
       parameters:
         - $ref: '#/components/parameters/postId'
         - $ref: '#/components/parameters/commentId'
@@ -494,6 +519,7 @@ paths:
 
   /post/{postId}/comment/{commentId}/activate:
     put:
+      operationId: activateComment
       parameters:
         - $ref: '#/components/parameters/postId'
         - $ref: '#/components/parameters/commentId'
@@ -533,6 +559,7 @@ paths:
 
   /post/{postId}/comment/{commentId}/block:
     put:
+      operationId: blockComment
       parameters:
         - $ref: '#/components/parameters/postId'
         - $ref: '#/components/parameters/commentId'
@@ -614,7 +641,7 @@ components:
         - id
         - post_id
         - user_id
-        - text
+        - body
         - status
         - created_at
         - updated_at
@@ -623,15 +650,18 @@ components:
           type: string
           format: uuid
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
         post_id:
           type: string
           format: uuid
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
         user_id:
           type: string
           format: uuid
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
-        text:
+          readOnly: true
+        body:
           type: string
           example: Something cool maybe
         status:
@@ -643,11 +673,21 @@ components:
           type: string
           format: date-time
           example: 2021-09-20T12:00:00Z
+          readOnly: true
         updated_at:
           type: string
           format: date-time
           example: 2021-09-20T13:41:22Z
+          readOnly: true
 
+    CreateCommentRequest:
+      type: object
+      required:
+        - body
+      properties:
+        body:
+          type: string
+          example: Something cool maybe
 
     Post:
       type: object
@@ -696,6 +736,19 @@ components:
           format: date-time
           example: 2021-09-20T13:41:22Z
           readOnly: true
+
+    CreatePostRequest:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          example: Post name
+        content:
+          type: string
+          example: content
 
     User:
       type: object

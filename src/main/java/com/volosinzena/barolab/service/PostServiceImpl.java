@@ -3,9 +3,11 @@ package com.volosinzena.barolab.service;
 import com.volosinzena.barolab.exception.PostNotFoundException;
 import com.volosinzena.barolab.mapper.PostMapper;
 import com.volosinzena.barolab.repository.PostRepository;
+import com.volosinzena.barolab.repository.UserRepository;
 import com.volosinzena.barolab.service.model.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,11 +20,13 @@ import java.util.UUID;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final PostMapper postMapper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
         this.postMapper = postMapper;
     }
 
@@ -37,7 +41,13 @@ public class PostServiceImpl implements PostService {
     public Post createPost(String title, String content) {
         log.info("Create Post Request");
 
+        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        com.volosinzena.barolab.repository.entity.UserEntity userEntity = userRepository
+                .findById(UUID.fromString(currentUserId))
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
         com.volosinzena.barolab.repository.entity.PostEntity entity = new com.volosinzena.barolab.repository.entity.PostEntity();
+        entity.setUser(userEntity);
         entity.setTitle(title);
         entity.setContent(content);
 

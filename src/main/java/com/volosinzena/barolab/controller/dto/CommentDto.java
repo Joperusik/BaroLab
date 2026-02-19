@@ -1,5 +1,6 @@
 package com.volosinzena.barolab.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,19 @@ import java.time.Instant;
 @AllArgsConstructor
 public class CommentDto {
     private String id;
-    private String post_id;
-    private String user_id;
-    private String text;
+
+    @JsonProperty("post_id")
+    private String postId;
+
+    @JsonProperty("user_id")
+    private String userId;
+
+    private String body;
     private Status status;
+
+    @JsonProperty("created_at")
     private Instant createdAt;
+
+    @JsonProperty("updated_at")
     private Instant updatedAt;
-
-
 }

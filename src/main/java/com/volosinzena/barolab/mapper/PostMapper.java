@@ -36,7 +36,6 @@ public class PostMapper {
         dto.setStatus(com.volosinzena.barolab.controller.dto.Status
                 .valueOf(String.valueOf(Status.valueOf(post.getStatus().name()))));
         dto.setTitle(post.getTitle());
-        dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());
         dto.setCreatedAt(post.getCreatedAt());
         dto.setUpdatedAt(post.getUpdatedAt());
@@ -50,7 +49,7 @@ public class PostMapper {
         }
         Post post = new Post();
         post.setId(entity.getId());
-        post.setUserId(entity.getUserId());
+        post.setUserId(entity.getUser() != null ? entity.getUser().getId() : null);
         post.setRating(entity.getRating());
         if (entity.getStatus() != null) {
             post.setStatus(Status.valueOf(entity.getStatus().name()));
@@ -68,7 +67,7 @@ public class PostMapper {
         }
         com.volosinzena.barolab.repository.entity.PostEntity entity = new com.volosinzena.barolab.repository.entity.PostEntity();
         entity.setId(post.getId());
-        entity.setUserId(post.getUserId());
+        // Note: user relationship must be set separately by the caller
         entity.setRating(post.getRating());
         if (post.getStatus() != null) {
             entity.setStatus(com.volosinzena.barolab.repository.entity.Status.valueOf(post.getStatus().name()));
