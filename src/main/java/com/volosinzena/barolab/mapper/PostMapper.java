@@ -1,6 +1,7 @@
 package com.volosinzena.barolab.mapper;
 
 import com.volosinzena.barolab.controller.dto.PostDto;
+import com.volosinzena.barolab.controller.dto.VoteValue;
 import com.volosinzena.barolab.service.model.Post;
 import com.volosinzena.barolab.service.model.Status;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ public class PostMapper {
         post.setId(dto.getId());
         post.setUserId(dto.getUserId());
         post.setRating(dto.getRating());
+        if (dto.getMyVote() != null) {
+            post.setMyVote(com.volosinzena.barolab.service.model.VoteValue.valueOf(dto.getMyVote().name()));
+        }
         post.setAuthorUsername(dto.getAuthorUsername());
         post.setStatus((Status.valueOf(dto.getStatus().name())));
         post.setTitle(dto.getTitle());
@@ -34,6 +38,9 @@ public class PostMapper {
         dto.setId(post.getId());
         dto.setUserId(post.getUserId());
         dto.setRating(post.getRating());
+        if (post.getMyVote() != null) {
+            dto.setMyVote(VoteValue.valueOf(post.getMyVote().name()));
+        }
         dto.setAuthorUsername(post.getAuthorUsername());
         dto.setStatus(com.volosinzena.barolab.controller.dto.Status
                 .valueOf(String.valueOf(Status.valueOf(post.getStatus().name()))));

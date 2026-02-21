@@ -427,6 +427,84 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /post/{postId}/like:
+    post:
+      operationId: likePost
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      tags:
+        - Posts
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /post/{postId}/dislike:
+    post:
+      operationId: dislikePost
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      tags:
+        - Posts
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /post/{postId}/comment:
     post:
       operationId: createComment
@@ -722,6 +800,11 @@ components:
         rating:
           type: integer
           example: 0
+          readOnly: true
+        my_vote:
+          type: integer
+          enum: [ -1, 1 ]
+          example: 1
           readOnly: true
         status:
           type: string 
