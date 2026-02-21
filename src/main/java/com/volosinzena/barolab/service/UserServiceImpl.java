@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User signUp(String login, String email, String password) {
+    public User signUp(String login, String email, String username, String password) {
 
         log.info("SignUp Request");
         Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalUser = userRepository.findByLogin(login);
@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService {
         com.volosinzena.barolab.repository.entity.UserEntity entity = new com.volosinzena.barolab.repository.entity.UserEntity();
         entity.setLogin(login);
         entity.setEmail(email);
+        entity.setUsername(username);
         entity.setPassword(passwordEncoder.encode(password));
 
         Instant now = Instant.now();

@@ -18,6 +18,9 @@ public class PostDto {
     @JsonProperty("user_id")
     private UUID userId;
 
+    @JsonProperty("author_username")
+    private String authorUsername;
+
     private Integer rating;
     private Status status;
     private String title;

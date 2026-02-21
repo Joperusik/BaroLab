@@ -4,6 +4,7 @@ CREATE TABLE users
     id         UUID PRIMARY KEY         DEFAULT gen_random_uuid(),
     login      TEXT        NOT NULL UNIQUE,
     email      TEXT        NOT NULL UNIQUE,
+    username   TEXT        NOT NULL UNIQUE,
     password   TEXT        NOT NULL, -- Храните здесь хэш, а не чистый пароль
     status     TEXT        NOT NULL    ,
     role       TEXT        NOT NULL,

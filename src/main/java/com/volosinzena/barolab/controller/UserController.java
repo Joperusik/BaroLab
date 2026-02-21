@@ -35,6 +35,7 @@ public class UserController {
         User user = userService.signUp(
                 signUpRequestDto.getLogin(),
                 signUpRequestDto.getEmail(),
+                signUpRequestDto.getUsername(),
                 signUpRequestDto.getPassword());
 
         String token = tokenService.generateToken(user);

@@ -34,6 +34,7 @@ public class TokenService {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("role", user.getRole().name())
+                .claim("username", user.getUsername())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiryDate))
                 .signWith(getSigningKey())
@@ -47,6 +48,10 @@ public class TokenService {
     public Role getRole(String token) {
         String roleName = getClaims(token).get("role", String.class);
         return Role.valueOf(roleName);
+    }
+
+    public String getUsername(String token) {
+        return getClaims(token).get("username", String.class);
     }
 
     public boolean isValidToken(String token) {

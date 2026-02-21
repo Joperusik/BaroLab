@@ -15,6 +15,7 @@ public class User {
     private UUID id;
     private String login;
     private String email;
+    private String username;
     private String password;
     private Status status;
     private Role role;

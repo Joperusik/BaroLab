@@ -10,6 +10,7 @@ public class Post {
 
     private UUID id;
     private UUID userId;
+    private String authorUsername;
     private Integer rating;
     private Status status;
     private String title;

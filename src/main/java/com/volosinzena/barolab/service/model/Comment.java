@@ -11,6 +11,7 @@ public class Comment {
     private UUID id;
     private UUID postId;
     private UUID userId;
+    private String authorUsername;
     private String body;
     private Status status;
     private Instant createdAt;
