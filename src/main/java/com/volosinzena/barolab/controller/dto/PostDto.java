@@ -22,6 +22,9 @@ public class PostDto {
     private String authorUsername;
 
     private Integer rating;
+
+    @JsonProperty("my_vote")
+    private VoteValue myVote;
     private Status status;
     private String title;
     private String content;

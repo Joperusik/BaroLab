@@ -63,4 +63,18 @@ public class PostController {
         PostDto responseDto = postMapper.toDto(post);
         return ResponseEntity.ok(responseDto);
     }
+
+    @PostMapping("/post/{postId}/like")
+    public ResponseEntity<PostDto> likePost(@PathVariable UUID postId) {
+        Post post = postService.likePost(postId);
+        PostDto responseDto = postMapper.toDto(post);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/post/{postId}/dislike")
+    public ResponseEntity<PostDto> dislikePost(@PathVariable UUID postId) {
+        Post post = postService.dislikePost(postId);
+        PostDto responseDto = postMapper.toDto(post);
+        return ResponseEntity.ok(responseDto);
+    }
 }

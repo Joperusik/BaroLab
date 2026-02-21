@@ -12,6 +12,7 @@ public class Post {
     private UUID userId;
     private String authorUsername;
     private Integer rating;
+    private VoteValue myVote;
     private Status status;
     private String title;
     private String content;

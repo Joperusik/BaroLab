@@ -16,4 +16,8 @@ public interface PostService {
     Post activatePost(UUID postId);
 
     Post blockPost(UUID postId);
+
+    Post likePost(UUID postId);
+
+    Post dislikePost(UUID postId);
 }
