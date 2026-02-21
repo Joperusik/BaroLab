@@ -641,6 +641,7 @@ components:
         - id
         - post_id
         - user_id
+        - author_username
         - body
         - status
         - created_at
@@ -660,6 +661,9 @@ components:
           type: string
           format: uuid
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
+        author_username:
+          type: string
           readOnly: true
         body:
           type: string
@@ -694,6 +698,7 @@ components:
       required:
         - id
         - user_id
+        - author_username
         - rating
         - status
         - title
@@ -710,6 +715,9 @@ components:
           type: string
           format: uuid
           example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
+        author_username:
+          type: string
           readOnly: true
         rating:
           type: integer
@@ -756,6 +764,7 @@ components:
         - id
         - login
         - email
+        - username
         - status
         - role
         - created_at
@@ -773,6 +782,8 @@ components:
           type: string
           format: email
           example: test@gmail.com
+        username:
+          type: string
         status:
           type: string
           enum: [ ACTIVE, BLOCKED ]
@@ -822,6 +833,7 @@ components:
       required:
         - login
         - email
+        - username
         - password
       properties:
         login:
@@ -831,6 +843,8 @@ components:
           type: string
           format: email
           example: user@example.com
+        username:
+          type: string
         password:
           type: string
           format: password

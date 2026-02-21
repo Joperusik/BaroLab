@@ -19,6 +19,9 @@ public class CommentDto {
     @JsonProperty("user_id")
     private String userId;
 
+    @JsonProperty("author_username")
+    private String authorUsername;
+
     private String body;
     private Status status;
 

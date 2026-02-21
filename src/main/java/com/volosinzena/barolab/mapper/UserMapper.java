@@ -15,6 +15,7 @@ public class UserMapper {
         user.setId(dto.getId());
         user.setLogin(dto.getLogin());
         user.setEmail(dto.getEmail());
+        user.setUsername(dto.getUsername());
         user.setCreatedAt(dto.getCreatedAt());
         user.setUpdatedAt(dto.getUpdatedAt());
         user.setStatus(Status.valueOf(String.valueOf(Status.valueOf(String.valueOf(dto.getStatus())))));
@@ -29,6 +30,7 @@ public class UserMapper {
         dto.setId(user.getId());
         dto.setLogin(user.getLogin());
         dto.setEmail(user.getEmail());
+        dto.setUsername(user.getUsername());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         dto.setStatus(com.volosinzena.barolab.controller.dto.Status
@@ -46,6 +48,7 @@ public class UserMapper {
         user.setId(entity.getId());
         user.setLogin(entity.getLogin());
         user.setEmail(entity.getEmail());
+        user.setUsername(entity.getUsername());
         user.setPassword(entity.getPassword());
         user.setStatus(Status.valueOf(entity.getStatus().name()));
         user.setRole(Role.valueOf(entity.getRole().name()));
@@ -62,6 +65,7 @@ public class UserMapper {
         entity.setId(user.getId());
         entity.setLogin(user.getLogin());
         entity.setEmail(user.getEmail());
+        entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
         if (user.getStatus() != null) {
             entity.setStatus(com.volosinzena.barolab.repository.entity.Status.valueOf(user.getStatus().name()));

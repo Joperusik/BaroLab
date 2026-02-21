@@ -16,6 +16,7 @@ public class PostMapper {
         post.setId(dto.getId());
         post.setUserId(dto.getUserId());
         post.setRating(dto.getRating());
+        post.setAuthorUsername(dto.getAuthorUsername());
         post.setStatus((Status.valueOf(dto.getStatus().name())));
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
@@ -33,6 +34,7 @@ public class PostMapper {
         dto.setId(post.getId());
         dto.setUserId(post.getUserId());
         dto.setRating(post.getRating());
+        dto.setAuthorUsername(post.getAuthorUsername());
         dto.setStatus(com.volosinzena.barolab.controller.dto.Status
                 .valueOf(String.valueOf(Status.valueOf(post.getStatus().name()))));
         dto.setTitle(post.getTitle());
@@ -50,6 +52,7 @@ public class PostMapper {
         Post post = new Post();
         post.setId(entity.getId());
         post.setUserId(entity.getUser() != null ? entity.getUser().getId() : null);
+        post.setAuthorUsername(entity.getUser() != null ? entity.getUser().getUsername() : null);
         post.setRating(entity.getRating());
         if (entity.getStatus() != null) {
             post.setStatus(Status.valueOf(entity.getStatus().name()));

@@ -16,6 +16,7 @@ public class UserDto {
     private UUID id;
     private String login;
     private String email;
+    private String username;
     @JsonIgnore
     private String password;
     private Status status;
