@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signUp(String login, String email, String username, String password) {
 
-        log.info("SignUp Request");
+        log.info("Sign up request login={}", login);
         Optional<com.volosinzena.barolab.repository.entity.UserEntity> optionalUser = userRepository.findByLogin(login);
 
         if (optionalUser.isPresent()) {
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
         com.volosinzena.barolab.repository.entity.UserEntity savedEntity = userRepository.save(entity);
 
-        log.info("Succsessfully created");
+        log.info("Sign up success login={} userId={}", login, savedEntity.getId());
 
         return userMapper.toDomain(savedEntity);
     }
@@ -74,13 +74,16 @@ public class UserServiceImpl implements UserService {
         // otherwise modify
 
         if (!passwordEncoder.matches(password, entity.getPassword())) {
+            log.warn("Login failed bad credentials login={}", login);
             throw new com.volosinzena.barolab.exception.BadCredentialsException("Invalid password");
         }
 
         if (entity.getStatus() == com.volosinzena.barolab.repository.entity.Status.BLOCKED) {
+            log.warn("Login blocked login={}", login);
             throw new com.volosinzena.barolab.exception.UserBlockedException(login);
         }
 
+        log.info("Login success login={} userId={}", login, entity.getId());
         return userMapper.toDomain(entity);
     }
 

@@ -46,18 +46,15 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         String jwt = getJwtFromRequest(request);
 
         if (!StringUtils.hasText(jwt)) {
-            log.warn("JWT Token is missing or empty");
             filterChain.doFilter(request, response);
             return;
         }
 
         if (!tokenService.isValidToken(jwt)) {
-            log.warn("JWT Token is invalid: {}", jwt);
+            log.warn("JWT invalid method={} path={}", request.getMethod(), request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
-
-        log.info("JWT Token is valid");
 
         String id = tokenService.getId(jwt);
         Role userUpperBoundaryRole = tokenService.getRole(jwt);
@@ -86,12 +83,14 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
         requestAttributeSecurityContextRepository.saveContext(securityContext, request, response);
 
+        log.info("JWT auth success userId={} role={} method={} path={}", id, userUpperBoundaryRole,
+                request.getMethod(), request.getRequestURI());
+
         filterChain.doFilter(request, response);
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("Authorization Header: {}", bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TOKEN_PREFIX)) {
             return bearerToken.substring(BEARER_TOKEN_PREFIX.length());
         }
