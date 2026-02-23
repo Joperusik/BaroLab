@@ -57,6 +57,15 @@ public class SecurityConfig {
                                                                                 "/v3/api-docs/**")
                                                                 .permitAll()
 
+                                                                // Guest Access: GET requests for viewing posts and
+                                                                // comments
+                                                                .requestMatchers(HttpMethod.GET,
+                                                                                "/posts",
+                                                                                "/post/*",
+                                                                                "/post/*/comment",
+                                                                                "/post/*/comment/*")
+                                                                .permitAll()
+
                                                                 // SUPER_ADMIN — user management (role, activate, block)
                                                                 .requestMatchers(HttpMethod.PUT,
                                                                                 "/user/*/role",
@@ -73,20 +82,18 @@ public class SecurityConfig {
                                                                                 "/post/*/comment/*/block")
                                                                 .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
 
-                                                                // USER — read access to posts, users, comments + create
+                                                                // USER — read access to users + create
                                                                 // posts and comments
                                                                 .requestMatchers(HttpMethod.GET,
                                                                                 "/users",
-                                                                                "/user/*",
-                                                                                "/posts",
-                                                                                "/post/*",
-                                                                                "/post/*/comment",
-                                                                                "/post/*/comment/*")
+                                                                                "/user/*")
                                                                 .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
                                                                                 "SUPER_ADMIN")
                                                                 .requestMatchers(HttpMethod.POST,
                                                                                 "/posts",
-                                                                                "/post/*/comment")
+                                                                                "/post/*/comment",
+                                                                                "/post/*/like",
+                                                                                "/post/*/dislike")
                                                                 .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
                                                                                 "SUPER_ADMIN")
 

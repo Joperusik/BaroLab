@@ -13,9 +13,15 @@ public class CommentMapper {
             return null;
         }
         Comment comment = new Comment();
-        comment.setId(java.util.UUID.fromString(dto.getId()));
-        comment.setPostId(java.util.UUID.fromString(dto.getPostId()));
-        comment.setUserId(java.util.UUID.fromString(dto.getUserId()));
+        if (dto.getId() != null) {
+            comment.setId(java.util.UUID.fromString(dto.getId()));
+        }
+        if (dto.getPostId() != null) {
+            comment.setPostId(java.util.UUID.fromString(dto.getPostId()));
+        }
+        if (dto.getUserId() != null) {
+            comment.setUserId(java.util.UUID.fromString(dto.getUserId()));
+        }
         comment.setAuthorUsername(dto.getAuthorUsername());
         comment.setBody(dto.getBody());
         if (dto.getStatus() != null) {

@@ -31,7 +31,8 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostVoteRepository postVoteRepository, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository,
+            PostVoteRepository postVoteRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postVoteRepository = postVoteRepository;
@@ -46,9 +47,12 @@ public class PostServiceImpl implements PostService {
                 .toList();
 
         if (!posts.isEmpty()) {
-            UserEntity userEntity = getCurrentUser();
-            List<UUID> postIds = entities.stream().map(PostEntity::getId).toList();
-            applyUserVotes(posts, postIds, userEntity.getId());
+            String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+            if (currentUserId != null && !currentUserId.equals("anonymousUser")) {
+                UserEntity userEntity = getCurrentUser();
+                List<UUID> postIds = entities.stream().map(PostEntity::getId).toList();
+                applyUserVotes(posts, postIds, userEntity.getId());
+            }
         }
 
         return posts;
@@ -88,9 +92,12 @@ public class PostServiceImpl implements PostService {
             throw new PostNotFoundException(postId);
         }
         Post post = postMapper.toDomain(optionalEntity.get());
-        UserEntity userEntity = getCurrentUser();
-        postVoteRepository.findByPost_IdAndUser_Id(postId, userEntity.getId())
-                .ifPresent(vote -> post.setMyVote(VoteValue.fromValue(vote.getValue())));
+        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (currentUserId != null && !currentUserId.equals("anonymousUser")) {
+            UserEntity userEntity = getCurrentUser();
+            postVoteRepository.findByPost_IdAndUser_Id(postId, userEntity.getId())
+                    .ifPresent(vote -> post.setMyVote(VoteValue.fromValue(vote.getValue())));
+        }
         return post;
     }
 
