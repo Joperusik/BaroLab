@@ -54,7 +54,8 @@ public class SecurityConfig {
                                                                                 "/login",
                                                                                 "/sign-up",
                                                                                 "/swagger-ui/**",
-                                                                                "/v3/api-docs/**")
+                                                                                "/v3/api-docs/**",
+                                                                                "/mod/*/transition")
                                                                 .permitAll()
 
                                                                 // Guest Access: GET requests for viewing posts and
@@ -63,7 +64,11 @@ public class SecurityConfig {
                                                                                 "/posts",
                                                                                 "/post/*",
                                                                                 "/post/*/comment",
-                                                                                "/post/*/comment/*")
+                                                                                "/post/*/comment/*",
+                                                                                "/mods",
+                                                                                "/mod/*",
+                                                                                "/mod/*/comment",
+                                                                                "/mod/*/comment/*")
                                                                 .permitAll()
 
                                                                 // SUPER_ADMIN — user management (role, activate, block)
@@ -79,7 +84,11 @@ public class SecurityConfig {
                                                                                 "/post/*/activate",
                                                                                 "/post/*/block",
                                                                                 "/post/*/comment/*/activate",
-                                                                                "/post/*/comment/*/block")
+                                                                                "/post/*/comment/*/block",
+                                                                                "/mod/*/activate",
+                                                                                "/mod/*/block",
+                                                                                "/mod/*/comment/*/activate",
+                                                                                "/mod/*/comment/*/block")
                                                                 .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
 
                                                                 // USER — read access to users + create
@@ -91,7 +100,9 @@ public class SecurityConfig {
                                                                                 "SUPER_ADMIN")
                                                                 .requestMatchers(HttpMethod.POST,
                                                                                 "/posts",
+                                                                                "/mods",
                                                                                 "/post/*/comment",
+                                                                                "/mod/*/comment",
                                                                                 "/post/*/like",
                                                                                 "/post/*/dislike")
                                                                 .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
@@ -103,9 +114,11 @@ public class SecurityConfig {
                                                 cors -> cors.configurationSource(
                                                                 request -> {
                                                                         CorsConfiguration configuration = new CorsConfiguration();
-                                                                        configuration.setAllowedOrigins(List.of("*"));
+                                                                        configuration.setAllowedOriginPatterns(
+                                                                                        List.of("*"));
                                                                         configuration.setAllowedMethods(List.of("*"));
                                                                         configuration.setAllowedHeaders(List.of("*"));
+                                                                        configuration.setAllowCredentials(true);
                                                                         return configuration;
                                                                 }))
                                 .csrf(AbstractHttpConfigurer::disable)

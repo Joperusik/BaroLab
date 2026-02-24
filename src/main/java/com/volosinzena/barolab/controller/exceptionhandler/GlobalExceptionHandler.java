@@ -1,6 +1,7 @@
 package com.volosinzena.barolab.controller.exceptionhandler;
 
 import com.volosinzena.barolab.controller.dto.ErrorDto;
+import com.volosinzena.barolab.exception.ModNotFoundException;
 import com.volosinzena.barolab.exception.UserAlreadyExistsException;
 import com.volosinzena.barolab.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorDto> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         log.warn("User already exists: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(ModNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleModNotFoundException(ModNotFoundException e) {
+        log.warn("Mod not found: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDto> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.warn("Bad request: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
     }
 
