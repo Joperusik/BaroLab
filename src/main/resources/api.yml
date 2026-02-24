@@ -16,6 +16,7 @@ tags:
   - name: Admins
   - name: Posts
   - name: Comments
+  - name: Mods
 
 paths:
   /login:
@@ -675,6 +676,194 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /mods:
+    post:
+      operationId: createMod
+      tags:
+        - Mods
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateModPostRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModPost'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      operationId: getAllMods
+      summary: Get all Mods
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModPost'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}:
+    get:
+      operationId: getModByExternalId
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      summary: Get Mod by external ID
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModPost'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/transition:
+    post:
+      operationId: transitionToMod
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      summary: Redirect to Steam Workshop and register click (cooldown 1h)
+      tags:
+        - Mods
+      responses:
+        302:
+          description: Redirect to Steam Workshop
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/activate:
+    put:
+      operationId: activateMod
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModPost'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/block:
+    put:
+      operationId: blockMod
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModPost'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
 
@@ -711,6 +900,15 @@ components:
         type: string
         format: uuid
       description: ID of the User
+
+    externalId:
+      name: externalId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: Steam Workshop external id
 
   schemas:
     Comment:
@@ -840,6 +1038,91 @@ components:
         content:
           type: string
           example: content
+
+    ModPost:
+      type: object
+      required:
+        - id
+        - user_id
+        - author_username
+        - rating
+        - status
+        - title
+        - content
+        - created_at
+        - updated_at
+        - external_id
+        - popularity
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
+        user_id:
+          type: string
+          format: uuid
+          example: 38ca31a9-a336-4087-ac97-d1ed40a2778e
+          readOnly: true
+        author_username:
+          type: string
+          readOnly: true
+        rating:
+          type: integer
+          example: 0
+          readOnly: true
+        my_vote:
+          type: integer
+          enum: [ -1, 1 ]
+          example: 1
+          readOnly: true
+        status:
+          type: string
+          enum: [ ACTIVE, BLOCKED ]
+          example: ACTIVE
+          readOnly: true
+        title:
+          type: string
+          example: Mod name
+        content:
+          type: string
+          example: content
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T12:00:00Z
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          example: 2021-09-20T13:41:22Z
+          readOnly: true
+        external_id:
+          type: integer
+          format: int64
+          example: 3520553488
+          readOnly: true
+        popularity:
+          type: integer
+          example: 0
+          readOnly: true
+
+    CreateModPostRequest:
+      type: object
+      required:
+        - title
+        - content
+        - external_url
+      properties:
+        title:
+          type: string
+          example: Mod name
+        content:
+          type: string
+          example: content
+        external_url:
+          type: string
+          example: https://steamcommunity.com/sharedfiles/filedetails/?id=3520553488
 
     User:
       type: object

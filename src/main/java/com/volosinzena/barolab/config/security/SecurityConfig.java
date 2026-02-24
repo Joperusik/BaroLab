@@ -51,10 +51,11 @@ public class SecurityConfig {
                                                                 // Public endpoints (no auth required)
                                                                 .requestMatchers(
                                                                                 "/ping",
-                                                                                "/login",
-                                                                                "/sign-up",
-                                                                                "/swagger-ui/**",
-                                                                                "/v3/api-docs/**")
+                                                                "/login",
+                                                                "/sign-up",
+                                                                "/swagger-ui/**",
+                                                                "/v3/api-docs/**",
+                                                                "/mod/*/transition")
                                                                 .permitAll()
 
                                                                 // Guest Access: GET requests for viewing posts and
@@ -63,7 +64,9 @@ public class SecurityConfig {
                                                                                 "/posts",
                                                                                 "/post/*",
                                                                                 "/post/*/comment",
-                                                                                "/post/*/comment/*")
+                                                                                "/post/*/comment/*",
+                                                                                "/mods",
+                                                                                "/mod/*")
                                                                 .permitAll()
 
                                                                 // SUPER_ADMIN — user management (role, activate, block)
@@ -79,7 +82,9 @@ public class SecurityConfig {
                                                                                 "/post/*/activate",
                                                                                 "/post/*/block",
                                                                                 "/post/*/comment/*/activate",
-                                                                                "/post/*/comment/*/block")
+                                                                                "/post/*/comment/*/block",
+                                                                                "/mod/*/activate",
+                                                                                "/mod/*/block")
                                                                 .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
 
                                                                 // USER — read access to users + create
@@ -91,6 +96,7 @@ public class SecurityConfig {
                                                                                 "SUPER_ADMIN")
                                                                 .requestMatchers(HttpMethod.POST,
                                                                                 "/posts",
+                                                                                "/mods",
                                                                                 "/post/*/comment",
                                                                                 "/post/*/like",
                                                                                 "/post/*/dislike")

@@ -180,18 +180,43 @@ class EndpointsAuthTest {
     }
 
     @Test
-    @DisplayName("GET /posts requires auth")
-    void getPosts_requiresAuth() throws Exception {
-        mockMvc.perform(get("/posts"))
-                .andExpect(status().isUnauthorized());
-    }
+    @DisplayName("GET /posts without token -> 200")
+    void getPosts_withoutToken_ok() throws Exception {
+        Post post = new Post();
+        UUID postId = UUID.randomUUID();
+        post.setId(postId);
+        post.setUserId(UUID.randomUUID());
+        post.setAuthorUsername("alice");
+        post.setRating(1);
+        post.setMyVote(null);
+        post.setStatus(Status.ACTIVE);
+        post.setTitle("t");
+        post.setContent("c");
+        post.setCreatedAt(Instant.now());
+        post.setUpdatedAt(Instant.now());
 
-    @Test
-    @DisplayName("GET /posts invalid token -> 401")
-    void getPosts_invalidToken_unauthorized() throws Exception {
-        mockMvc.perform(get("/posts")
-                        .header("Authorization", "Bearer invalid-token"))
-                .andExpect(status().isUnauthorized());
+        PostDto dto = new PostDto(
+                post.getId(),
+                post.getUserId(),
+                post.getAuthorUsername(),
+                post.getRating(),
+                null,
+                com.volosinzena.barolab.controller.dto.Status.ACTIVE,
+                post.getTitle(),
+                post.getContent(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        );
+
+        when(postService.getAllPosts()).thenReturn(List.of(post));
+        when(postMapper.toDto(post)).thenReturn(dto);
+
+        mockMvc.perform(get("/posts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(postId.toString()))
+                .andExpect(jsonPath("$[0].author_username").value("alice"))
+                .andExpect(jsonPath("$[0].title").value("t"))
+                .andExpect(jsonPath("$[0].content").value("c"));
     }
 
     @Test

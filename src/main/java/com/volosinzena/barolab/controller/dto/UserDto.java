@@ -1,6 +1,7 @@
 package com.volosinzena.barolab.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class UserDto {
 
     private UUID id;
     private String login;
-    private String email;
+    @Email private String email;
     private String username;
     @JsonIgnore
     private String password;

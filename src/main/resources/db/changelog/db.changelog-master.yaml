@@ -5,3 +5,9 @@ databaseChangeLog:
   - include:
       file: 002-create-post-votes.sql
       relativeToChangelogFile: true
+  - include:
+      file: 003-create-mod-posts.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 004-rename-mod-subscribe-to-transition.sql
+      relativeToChangelogFile: true

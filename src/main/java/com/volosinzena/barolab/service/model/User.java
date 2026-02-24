@@ -1,5 +1,6 @@
 package com.volosinzena.barolab.service.model;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
