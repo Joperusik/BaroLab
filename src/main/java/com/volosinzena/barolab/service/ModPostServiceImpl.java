@@ -52,8 +52,9 @@ public class ModPostServiceImpl implements ModPostService {
         List<ModPost> mods = entities.stream().map(modPostMapper::toDomain).toList();
 
         if (!mods.isEmpty()) {
-            String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (currentUserId != null && !currentUserId.equals("anonymousUser")) {
+            var authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentUserId = authentication != null ? authentication.getName() : null;
+            if (currentUserId != null && !"anonymousUser".equals(currentUserId)) {
                 UserEntity userEntity = getCurrentUser();
                 List<UUID> postIds = entities.stream().map(ModPostEntity::getPostId).toList();
                 applyUserVotes(mods, postIds, userEntity.getId());
@@ -70,8 +71,9 @@ public class ModPostServiceImpl implements ModPostService {
                 .orElseThrow(() -> new ModNotFoundException(externalId));
         ModPost modPost = modPostMapper.toDomain(entity);
 
-        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (currentUserId != null && !currentUserId.equals("anonymousUser")) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserId = authentication != null ? authentication.getName() : null;
+        if (currentUserId != null && !"anonymousUser".equals(currentUserId)) {
             UserEntity userEntity = getCurrentUser();
             postVoteRepository.findByPost_IdAndUser_Id(entity.getPostId(), userEntity.getId())
                     .ifPresent(vote -> modPost.setMyVote(VoteValue.fromValue(vote.getValue())));
@@ -187,7 +189,8 @@ public class ModPostServiceImpl implements ModPostService {
             throw new IllegalArgumentException("external_url must be a steamcommunity.com link");
         }
         String path = uri.getPath();
-        if (path == null || !path.startsWith("/sharedfiles/filedetails")) {
+        if (path == null
+                || !(path.startsWith("/sharedfiles/filedetails") || path.startsWith("/workshop/filedetails"))) {
             throw new IllegalArgumentException("external_url must be a workshop filedetails link");
         }
 

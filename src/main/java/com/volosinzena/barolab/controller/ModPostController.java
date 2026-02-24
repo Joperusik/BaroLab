@@ -2,8 +2,15 @@ package com.volosinzena.barolab.controller;
 
 import com.volosinzena.barolab.controller.dto.CreateModPostDto;
 import com.volosinzena.barolab.controller.dto.ModPostDto;
+import com.volosinzena.barolab.controller.dto.CommentDto;
+import com.volosinzena.barolab.controller.dto.CreateCommentDto;
 import com.volosinzena.barolab.mapper.ModPostMapper;
+import com.volosinzena.barolab.mapper.CommentMapper;
 import com.volosinzena.barolab.service.ModPostService;
+import com.volosinzena.barolab.service.ModTransitionService;
+import com.volosinzena.barolab.service.CommentService;
+import com.volosinzena.barolab.service.model.ModPost;
+import com.volosinzena.barolab.service.model.Comment;
 import com.volosinzena.barolab.service.ModTransitionService;
 import com.volosinzena.barolab.service.model.ModPost;
 import jakarta.servlet.http.Cookie;
@@ -36,13 +43,17 @@ public class ModPostController {
     private final ModPostService modPostService;
     private final ModTransitionService modTransitionService;
     private final ModPostMapper modPostMapper;
+    private final CommentService commentService;
+    private final CommentMapper commentMapper;
 
     @Autowired
     public ModPostController(ModPostService modPostService, ModTransitionService modTransitionService,
-            ModPostMapper modPostMapper) {
+            ModPostMapper modPostMapper, CommentService commentService, CommentMapper commentMapper) {
         this.modPostService = modPostService;
         this.modTransitionService = modTransitionService;
         this.modPostMapper = modPostMapper;
+        this.commentService = commentService;
+        this.commentMapper = commentMapper;
     }
 
     @PostMapping("/mods")
@@ -50,8 +61,7 @@ public class ModPostController {
         ModPost modPost = modPostService.createModPost(
                 createModPostDto.getTitle(),
                 createModPostDto.getContent(),
-                createModPostDto.getExternalUrl()
-        );
+                createModPostDto.getExternalUrl());
         ModPostDto responseDto = modPostMapper.toDto(modPost);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
@@ -92,6 +102,47 @@ public class ModPostController {
     public ResponseEntity<ModPostDto> blockMod(@PathVariable Long externalId) {
         ModPost modPost = modPostService.blockMod(externalId);
         ModPostDto responseDto = modPostMapper.toDto(modPost);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/mod/{externalId}/comment")
+    public ResponseEntity<CommentDto> createComment(@PathVariable Long externalId,
+            @RequestBody CreateCommentDto createCommentDto) {
+        ModPost modPost = modPostService.getModByExternalId(externalId);
+        Comment comment = commentService.createComment(modPost.getId(), createCommentDto.getBody());
+        CommentDto responseDto = commentMapper.toDto(comment);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/mod/{externalId}/comment")
+    public ResponseEntity<List<CommentDto>> getComments(@PathVariable Long externalId) {
+        ModPost modPost = modPostService.getModByExternalId(externalId);
+        List<Comment> commentList = commentService.getCommentsByPostId(modPost.getId());
+        List<CommentDto> commentDtoList = commentList.stream().map(commentMapper::toDto).toList();
+        return ResponseEntity.ok(commentDtoList);
+    }
+
+    @GetMapping("/mod/{externalId}/comment/{commentId}")
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long externalId,
+            @PathVariable UUID commentId) {
+        Comment comment = commentService.getCommentById(commentId);
+        CommentDto responseDto = commentMapper.toDto(comment);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PutMapping("/mod/{externalId}/comment/{commentId}/activate")
+    public ResponseEntity<CommentDto> activateComment(@PathVariable Long externalId,
+            @PathVariable UUID commentId) {
+        Comment comment = commentService.activateComment(commentId);
+        CommentDto responseDto = commentMapper.toDto(comment);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PutMapping("/mod/{externalId}/comment/{commentId}/block")
+    public ResponseEntity<CommentDto> blockComment(@PathVariable Long externalId,
+            @PathVariable UUID commentId) {
+        Comment comment = commentService.blockComment(commentId);
+        CommentDto responseDto = commentMapper.toDto(comment);
         return ResponseEntity.ok(responseDto);
     }
 

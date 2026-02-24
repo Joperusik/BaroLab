@@ -865,6 +865,176 @@ paths:
                 $ref: '#/components/schemas/Error'
 
 
+  /mod/{externalId}/comment:
+    post:
+      operationId: createModComment
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      tags:
+        - Comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      operationId: getCommentsByModId
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      summary: Get all Comments for a Mod
+      tags:
+        - Comments
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/comment/{commentId}:
+    get:
+      operationId: getModCommentById
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+        - $ref: '#/components/parameters/commentId'
+      summary: Get Comment by ID
+      tags:
+        - Comments
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/comment/{commentId}/activate:
+    put:
+      operationId: activateModComment
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+        - $ref: '#/components/parameters/commentId'
+      tags:
+        - Comments
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/comment/{commentId}/block:
+    put:
+      operationId: blockModComment
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+        - $ref: '#/components/parameters/commentId'
+      tags:
+        - Comments
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
 
   securitySchemes:
