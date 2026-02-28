@@ -11,3 +11,9 @@ databaseChangeLog:
   - include:
       file: 004-rename-mod-subscribe-to-transition.sql
       relativeToChangelogFile: true
+  - include:
+      file: 005-create-mod-guides.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 006-add-status-to-mod-guides.sql
+      relativeToChangelogFile: true
