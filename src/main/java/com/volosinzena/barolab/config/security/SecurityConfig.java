@@ -68,8 +68,10 @@ public class SecurityConfig {
                                                                                 "/mods",
                                                                                 "/mod/*",
                                                                                 "/mod/*/guide",
+                                                                                "/mod/*/guide/*",
                                                                                 "/mod/*/comment",
-                                                                                "/mod/*/comment/*")
+                                                                                "/mod/*/comment/*",
+                                                                                "/guides")
                                                                 .permitAll()
 
                                                                 // SUPER_ADMIN — user management (role, activate, block)
@@ -95,17 +97,16 @@ public class SecurityConfig {
                                                                 .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
                                                                 .requestMatchers(HttpMethod.POST,
                                                                                 "/mod/*/guide")
-                                                                .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
+                                                                .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
+                                                                                "SUPER_ADMIN")
                                                                 .requestMatchers(HttpMethod.PUT,
                                                                                 "/mod/*/guide/*")
-                                                                .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
+                                                                .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
+                                                                                "SUPER_ADMIN")
                                                                 .requestMatchers(HttpMethod.DELETE,
                                                                                 "/mod/*/guide/*")
-                                                                .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
-                                                                .requestMatchers(HttpMethod.GET,
-                                                                                "/guides")
-                                                                .hasAnyAuthority("ADMIN", "SUPER_ADMIN")
-
+                                                                .hasAnyAuthority("USER", "SUPERUSER", "ADMIN",
+                                                                                "SUPER_ADMIN")
                                                                 // USER — read access to users + create
                                                                 // posts and comments
                                                                 .requestMatchers(HttpMethod.GET,

@@ -68,7 +68,32 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getCommentsByPostId(UUID postId) {
+        boolean showBlocked = false;
+        org.springframework.security.core.Authentication authentication = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String currentUserId = authentication.getName();
+            if (currentUserId != null && !currentUserId.equals("anonymousUser")) {
+                try {
+                    com.volosinzena.barolab.repository.entity.UserEntity user = userRepository
+                            .findById(UUID.fromString(currentUserId)).orElse(null);
+                    if (user != null && user.getRole() != null) {
+                        String role = user.getRole().name();
+                        if ("ADMIN".equals(role) || "SUPER_ADMIN".equals(role)) {
+                            showBlocked = true;
+                        }
+                    }
+                } catch (IllegalArgumentException e) {
+                    // Ignore UUID parse errors
+                }
+            }
+        }
+
+        final boolean finalShowBlocked = showBlocked;
+
         return commentRepository.findByPostId(postId).stream()
+                .filter(comment -> finalShowBlocked
+                        || comment.getStatus() != com.volosinzena.barolab.repository.entity.Status.BLOCKED)
                 .map(commentMapper::toDomain)
                 .toList();
     }

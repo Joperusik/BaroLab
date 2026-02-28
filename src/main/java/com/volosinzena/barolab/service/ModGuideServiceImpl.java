@@ -36,6 +36,7 @@ public class ModGuideServiceImpl implements ModGuideService {
     public List<ModGuide> getGuidesByModId(Long modId) {
         return modGuideRepository.findAllByModPost_ExternalId(modId)
                 .stream()
+                .filter(guide -> guide.getStatus() != com.volosinzena.barolab.repository.entity.Status.BLOCKED)
                 .map(modGuideMapper::toDomain)
                 .collect(Collectors.toList());
     }
@@ -79,12 +80,24 @@ public class ModGuideServiceImpl implements ModGuideService {
                 .orElseThrow(() -> new GuideNotFoundException(guideId));
 
         UserEntity currentUser = getCurrentUser();
+
+        // Authorization check: User must be the author or an Admin
+        boolean isAdmin = currentUser.getRole() == com.volosinzena.barolab.repository.entity.Role.ADMIN ||
+                currentUser.getRole() == com.volosinzena.barolab.repository.entity.Role.SUPER_ADMIN;
+        boolean isAuthor = entity.getAuthor() != null && entity.getAuthor().getId().equals(currentUser.getId());
+
+        if (!isAdmin && !isAuthor) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "You do not have permission to edit this guide");
+        }
+
         Instant now = Instant.now();
 
         entity.setTitle(title);
         entity.setContent(content);
         entity.setUpdatedAt(now);
-        entity.setAuthor(currentUser);
+        // Do not change the author on update
+        // entity.setAuthor(currentUser);
 
         ModGuideEntity savedEntity = modGuideRepository.save(entity);
         return modGuideMapper.toDomain(savedEntity);
@@ -94,10 +107,22 @@ public class ModGuideServiceImpl implements ModGuideService {
     @Transactional
     public void deleteGuide(UUID guideId) {
         log.info("Deleting guide with id: {}", guideId);
-        if (!modGuideRepository.existsById(guideId)) {
-            throw new GuideNotFoundException(guideId);
+        ModGuideEntity entity = modGuideRepository.findById(guideId)
+                .orElseThrow(() -> new GuideNotFoundException(guideId));
+
+        UserEntity currentUser = getCurrentUser();
+
+        // Authorization check: User must be the author or an Admin
+        boolean isAdmin = currentUser.getRole() == com.volosinzena.barolab.repository.entity.Role.ADMIN ||
+                currentUser.getRole() == com.volosinzena.barolab.repository.entity.Role.SUPER_ADMIN;
+        boolean isAuthor = entity.getAuthor() != null && entity.getAuthor().getId().equals(currentUser.getId());
+
+        if (!isAdmin && !isAuthor) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "You do not have permission to delete this guide");
         }
-        modGuideRepository.deleteById(guideId);
+
+        modGuideRepository.delete(entity);
     }
 
     @Override
