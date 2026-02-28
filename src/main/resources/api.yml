@@ -825,6 +825,283 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /guides:
+    get:
+      operationId: getAllGuides
+      summary: Get all Guides across all Mods
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModGuide'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /guides/{guideId}/activate:
+    put:
+      operationId: activateGuide
+      parameters:
+        - $ref: '#/components/parameters/guideId'
+      summary: Activate a specific Guide by ID
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModGuide'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /guides/{guideId}/block:
+    put:
+      operationId: blockGuide
+      parameters:
+        - $ref: '#/components/parameters/guideId'
+      summary: Block a specific Guide by ID
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModGuide'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/guide:
+    get:
+      operationId: getModGuides
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      summary: Get all Guides for a Mod
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModGuide'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: createModGuide
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+      summary: Create a Guide for a Mod
+      tags:
+        - Mods
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateModGuideRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModGuide'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mod/{externalId}/guide/{guideId}:
+    get:
+      operationId: getModGuideById
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+        - $ref: '#/components/parameters/guideId'
+      summary: Get a specific Guide by ID
+      tags:
+        - Mods
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModGuide'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: updateModGuide
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+        - $ref: '#/components/parameters/guideId'
+      summary: Update a specific Guide
+      tags:
+        - Mods
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateModGuideRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModGuide'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: deleteModGuide
+      parameters:
+        - $ref: '#/components/parameters/externalId'
+        - $ref: '#/components/parameters/guideId'
+      summary: Delete a specific Guide
+      tags:
+        - Mods
+      responses:
+        204:
+          description: No Content
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /mod/{externalId}/block:
     put:
       operationId: blockMod
@@ -1044,6 +1321,15 @@ components:
       bearerFormat: JWT
 
   parameters:
+    guideId:
+      name: guideId
+      in: path
+      required: true
+      schema:
+        type: string 
+        format: uuid
+      description: Id of the Guide
+
     commentId:
       name: commentId
       in: path
@@ -1386,6 +1672,58 @@ components:
           format: password
           example: qwerty123456
           writeOnly: true
+    ModGuide:
+      type: object
+      required:
+        - id
+        - modId
+        - title
+        - content
+        - author
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        modId:
+          type: integer
+          format: int64
+          readOnly: true
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          $ref: '#/components/schemas/User'
+          readOnly: true
+        status:
+          type: string 
+          enum: [ ACTIVE, BLOCKED ]
+          example: ACTIVE
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    CreateModGuideRequest:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          minLength: 3
+        content:
+          type: string
 
     Error:
       type: object
